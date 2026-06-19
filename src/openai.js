@@ -6,6 +6,7 @@ export async function evaluateWithOpenAI({ apiKey, model, reasoningEffort, task,
   if (!apiKey) {
     const error = new Error("OPENAI_API_KEY is not configured.");
     error.statusCode = 503;
+    error.expose = true;
     throw error;
   }
 
@@ -100,4 +101,3 @@ function extractOutputText(payload) {
 
   return chunks.join("").trim();
 }
-

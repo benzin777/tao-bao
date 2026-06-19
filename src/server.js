@@ -59,7 +59,7 @@ const server = http.createServer(async (request, response) => {
   } catch (error) {
     const statusCode = error.statusCode || 500;
     sendJson(response, statusCode, {
-      error: statusCode >= 500 ? "Server error." : error.message,
+      error: statusCode >= 500 && !error.expose ? "Server error." : error.message,
     });
   }
 });
@@ -124,4 +124,3 @@ function contentTypeFor(filePath) {
     }[extension] || "application/octet-stream"
   );
 }
-
