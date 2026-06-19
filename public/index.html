@@ -25,6 +25,9 @@
         <button class="mode-button" id="modeButton" type="button" aria-label="Open mode controls">
           <span aria-hidden="true">Mode</span>
         </button>
+        <button class="hint-button" id="hintButton" type="button" aria-label="Open cohesive device hints">
+          <span aria-hidden="true">Hint</span>
+        </button>
         <label class="composer-shell">
           <span class="sr-only">Write your sentence</span>
           <textarea id="composer" rows="1" placeholder="Write your sentence..."></textarea>
@@ -99,22 +102,23 @@
         </div>
       </div>
 
-      <div class="control-group">
-        <label>Style changes</label>
-        <div class="style-grid" id="styleModes">
-          <button type="button" data-style="clearer">Clearer</button>
-          <button type="button" data-style="formal">Formal</button>
-          <button type="button" data-style="academic">Academic</button>
-          <button type="button" data-style="creative">Creative</button>
-          <button type="button" data-style="concise">Concise</button>
-          <button type="button" data-style="layered">Layered</button>
-        </div>
-        <p class="control-note">Optional. Pick one, many, or none. If none are selected, Tao Dao chooses the useful upgrade itself.</p>
-      </div>
-
       <div class="mode-preview" id="modePreview"></div>
 
       <button class="start-button" id="startTaskButton" type="button">Start task</button>
+    </section>
+
+    <section class="mode-sheet hint-sheet" id="hintSheet" aria-hidden="true">
+      <div class="sheet-handle"></div>
+      <div class="sheet-head">
+        <div>
+          <strong>Hint</strong>
+          <span>Cohesive devices by job</span>
+        </div>
+        <button class="icon-button subtle" id="closeHintSheet" type="button" aria-label="Close hints">×</button>
+      </div>
+
+      <div class="hint-current" id="hintCurrent"></div>
+      <div class="device-grid" id="deviceGroups"></div>
     </section>
 
     <div class="scrim" id="scrim" hidden></div>

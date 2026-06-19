@@ -125,9 +125,8 @@ export function normalizeConfig(config = {}) {
   const lesson = config.lesson === "structure" ? "structure" : "structure";
   const level = normalizeInteger(config.level, [1, 2, 3], 1);
   const support = ["easy", "normal", "hard"].includes(config.support) ? config.support : "easy";
-  const styleModes = normalizeStyleModes(config.styleModes);
 
-  return { lesson, level, support, styleModes };
+  return { lesson, level, support };
 }
 
 export function getFormulaById(formulaId) {
@@ -162,28 +161,18 @@ export function createTask(inputConfig = {}) {
 }
 
 function createInstruction(config, formula) {
-  const styleInstruction = config.styleModes.length
-    ? ` Apply these style changes after the structure is correct: ${config.styleModes.join(", ")}.`
-    : " Choose any useful style upgrade yourself after the structure is correct.";
-
   if (config.support === "easy") {
-    return `Write one sentence using the selected structure. Fill the frame without changing the logic.${styleInstruction}`;
+    return "Write one sentence using the selected structure. Fill the frame without changing the logic.";
   }
 
   if (config.support === "normal") {
-    return `Write one sentence using the selected level ${config.level} structure.${styleInstruction}`;
+    return `Write one sentence using the selected level ${config.level} structure. Keep the logic clear and connected.`;
   }
 
-  return `Make this idea sound intelligent and logically connected: "${formula.sourceIdea}" Use the selected level ${config.level} structure without being shown the frame.${styleInstruction}`;
+  return `Make this idea sound intelligent and logically connected: "${formula.sourceIdea}" Use the selected level ${config.level} structure without being shown the frame.`;
 }
 
 function normalizeInteger(value, allowed, fallback) {
   const parsed = Number(value);
   return allowed.includes(parsed) ? parsed : fallback;
-}
-
-function normalizeStyleModes(value) {
-  const allowed = new Set(["clearer", "formal", "academic", "creative", "concise", "layered"]);
-  if (!Array.isArray(value)) return [];
-  return [...new Set(value.filter((item) => allowed.has(item)))];
 }

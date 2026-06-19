@@ -61,14 +61,24 @@ It controls:
 | Lesson | Structure first |
 | Level | 1 / 2 / 3 |
 | Support | Easy / Normal / Hard |
-| Style changes | Optional multi-select: clearer, formal, academic, creative, concise, layered |
 
 Mode Drawer rules:
 
-- Use toggles, segmented controls, and compact multi-select chips.
+- Use toggles and segmented controls.
 - Do not expose formula choice in the drawer; Tao Dao chooses the exact formula from level/support.
 - Do not bury the learner in settings.
 - Close the drawer back into the dock when a task starts.
+
+## Hint Sheet
+
+The Hint button opens cohesive-device groups from the input dock.
+
+Hint Sheet rules:
+
+- Show the current task's required relation groups first.
+- Then show general groups such as cause, result, contrast, concession, condition, addition, sequence, clarification, example, and conclusion.
+- Let the learner tap a device to place it into the composer.
+- Do not turn hints into a second settings system.
 
 ## Task In Chat
 

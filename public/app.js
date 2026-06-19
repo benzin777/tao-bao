@@ -3,7 +3,6 @@ const state = {
     lesson: "structure",
     level: 1,
     support: "easy",
-    styleModes: [],
   },
   task: null,
   messages: [],
@@ -19,29 +18,80 @@ const elements = {
   subtitle: document.querySelector("#sessionSubtitle"),
   pageDrawer: document.querySelector("#pageDrawer"),
   modeSheet: document.querySelector("#modeSheet"),
+  hintSheet: document.querySelector("#hintSheet"),
   scrim: document.querySelector("#scrim"),
   modePreview: document.querySelector("#modePreview"),
-  styleModes: document.querySelector("#styleModes"),
+  hintCurrent: document.querySelector("#hintCurrent"),
+  deviceGroups: document.querySelector("#deviceGroups"),
 };
+
+const DEVICE_GROUPS = [
+  {
+    name: "Cause",
+    job: "shows the reason",
+    devices: ["because", "since", "as", "due to"],
+  },
+  {
+    name: "Result",
+    job: "shows the consequence",
+    devices: ["so", "therefore", "thus", "consequently"],
+  },
+  {
+    name: "Contrast",
+    job: "sets ideas against each other",
+    devices: ["but", "however", "yet", "whereas"],
+  },
+  {
+    name: "Concession",
+    job: "admits a point before turning",
+    devices: ["although", "even though", "despite", "nevertheless"],
+  },
+  {
+    name: "Condition",
+    job: "makes one idea depend on another",
+    devices: ["if", "unless", "provided that", "as long as"],
+  },
+  {
+    name: "Addition",
+    job: "adds or reinforces a point",
+    devices: ["and", "also", "moreover", "furthermore"],
+  },
+  {
+    name: "Sequence",
+    job: "orders the thought in time",
+    devices: ["first", "then", "meanwhile", "finally"],
+  },
+  {
+    name: "Clarification",
+    job: "restates the idea more precisely",
+    devices: ["in other words", "that is", "to put it simply"],
+  },
+  {
+    name: "Example",
+    job: "introduces a concrete instance",
+    devices: ["for example", "for instance", "such as", "namely"],
+  },
+  {
+    name: "Conclusion",
+    job: "closes the logic",
+    devices: ["therefore", "ultimately", "in short", "overall"],
+  },
+];
 
 document.querySelector("#menuButton").addEventListener("click", () => openDrawer(elements.pageDrawer));
 document.querySelector("#closePageDrawer").addEventListener("click", closeOverlays);
 document.querySelector("#modeButton").addEventListener("click", () => openDrawer(elements.modeSheet));
 document.querySelector("#closeModeSheet").addEventListener("click", closeOverlays);
+document.querySelector("#hintButton").addEventListener("click", () => openDrawer(elements.hintSheet));
+document.querySelector("#closeHintSheet").addEventListener("click", closeOverlays);
 document.querySelector("#startTaskButton").addEventListener("click", startTask);
 elements.scrim.addEventListener("click", closeOverlays);
 elements.form.addEventListener("submit", submitAttempt);
 elements.composer.addEventListener("input", autoSizeComposer);
-elements.styleModes.addEventListener("click", (event) => {
-  const button = event.target.closest("button[data-style]");
+elements.deviceGroups.addEventListener("click", (event) => {
+  const button = event.target.closest("button[data-device]");
   if (!button) return;
-
-  const style = button.dataset.style;
-  const selected = new Set(state.config.styleModes);
-  if (selected.has(style)) selected.delete(style);
-  else selected.add(style);
-  state.config.styleModes = [...selected];
-  syncControls();
+  insertDevice(button.dataset.device);
 });
 document.querySelectorAll("[data-material]").forEach((button) => {
   button.addEventListener("click", () => openMaterial(button.dataset.material));
@@ -62,6 +112,7 @@ document.querySelectorAll(".segmented").forEach((group) => {
 init();
 
 async function init() {
+  renderHints();
   await checkHealth();
   syncControls();
   await startTask();
@@ -91,6 +142,7 @@ async function startTask() {
   state.task = data.task;
   state.config = { ...state.task.config };
   syncControls();
+  renderHints();
   updateSubtitle();
 
   addMessage({
@@ -188,16 +240,12 @@ function renderMessage(message) {
 }
 
 function renderTaskMessage(task) {
-  const styleLabel = task.config.styleModes?.length
-    ? task.config.styleModes.map(capitalize).join(", ")
-    : "Auto style";
   return `
     <article class="message assistant">
       <div class="message-head">
         <span class="chip primary">Structure</span>
         <span class="chip">Level ${task.config.level}</span>
         <span class="chip">${capitalize(task.config.support)}</span>
-        <span class="chip">${escapeHtml(styleLabel)}</span>
       </div>
       <p>${escapeHtml(task.instruction)}</p>
       <div class="formula-box">
@@ -253,7 +301,7 @@ function renderResultMessage(attemptText, result) {
 }
 
 function renderIssue(issue) {
-  const title = `${capitalize(issue.category)} · ${capitalize(issue.severity)}`;
+  const title = `${labelCategory(issue.category)} · ${capitalize(issue.severity)}`;
   const replacement = issue.replacement ? `<p>${escapeHtml(issue.original)} → ${escapeHtml(issue.replacement)}</p>` : "";
   return `
     <div class="issue-card">
@@ -264,10 +312,10 @@ function renderIssue(issue) {
   `;
 }
 
-function renderVariant(variant) {
+function renderVariant(variant, index) {
   return `
     <div class="variant-card">
-      <strong>${escapeHtml(capitalize(variant.variant))}</strong>
+      <strong>Rewrite option ${index + 1}</strong>
       <p>${escapeHtml(variant.sentence)}</p>
       <p>${escapeHtml(variant.changeNote)}</p>
       <button type="button" data-use-variant="${escapeHtml(variant.sentence)}">Use sentence</button>
@@ -299,17 +347,11 @@ function syncControls() {
       button.classList.toggle("active", String(state.config[field]) === String(button.dataset.value));
     });
   });
-  elements.styleModes.querySelectorAll("button[data-style]").forEach((button) => {
-    button.classList.toggle("active", state.config.styleModes.includes(button.dataset.style));
-  });
   updateModePreview();
 }
 
 function updateModePreview() {
-  const styleText = state.config.styleModes.length
-    ? `Style changes: ${state.config.styleModes.map(capitalize).join(", ")}.`
-    : "Style changes: auto.";
-  elements.modePreview.textContent = `Structure · Level ${state.config.level} · ${capitalize(state.config.support)}. ${styleText}`;
+  elements.modePreview.textContent = `Structure · Level ${state.config.level} · ${capitalize(state.config.support)}`;
 }
 
 function updateSubtitle() {
@@ -324,7 +366,7 @@ function openDrawer(drawer) {
 }
 
 function closeOverlays() {
-  [elements.pageDrawer, elements.modeSheet].forEach((drawer) => {
+  [elements.pageDrawer, elements.modeSheet, elements.hintSheet].forEach((drawer) => {
     drawer.classList.remove("open");
     drawer.setAttribute("aria-hidden", "true");
   });
@@ -345,6 +387,66 @@ function openMaterial(material) {
 function autoSizeComposer() {
   elements.composer.style.height = "auto";
   elements.composer.style.height = `${Math.min(elements.composer.scrollHeight, 132)}px`;
+}
+
+function renderHints() {
+  elements.hintCurrent.innerHTML = renderCurrentHint();
+  elements.deviceGroups.innerHTML = DEVICE_GROUPS.map(renderDeviceGroup).join("");
+}
+
+function renderCurrentHint() {
+  const formula = state.task?.formula || [];
+  if (!formula.length) {
+    return `
+      <div class="current-card">
+        <strong>Current task</strong>
+        <p>Start a task to see the exact relation groups you need.</p>
+      </div>
+    `;
+  }
+
+  return `
+    <div class="current-card">
+      <strong>Current task needs</strong>
+      <div class="current-relations">
+        ${formula
+          .map(
+            (step) => `
+              <div class="relation-row">
+                <span>${escapeHtml(capitalize(step.relation))}</span>
+                <em>${escapeHtml(step.expectedMarkers.join(", "))}</em>
+              </div>
+            `,
+          )
+          .join("")}
+      </div>
+    </div>
+  `;
+}
+
+function renderDeviceGroup(group) {
+  return `
+    <section class="device-card">
+      <div>
+        <strong>${escapeHtml(group.name)}</strong>
+        <span>${escapeHtml(group.job)}</span>
+      </div>
+      <div class="device-row">
+        ${group.devices
+          .map((device) => `<button type="button" data-device="${escapeHtml(device)}">${escapeHtml(device)}</button>`)
+          .join("")}
+      </div>
+    </section>
+  `;
+}
+
+function insertDevice(device) {
+  const current = elements.composer.value;
+  const separator = current && !/\s$/.test(current) ? " " : "";
+  elements.composer.value = `${current}${separator}${device}`;
+  closeOverlays();
+  autoSizeComposer();
+  elements.composer.focus();
 }
 
 async function getJson(path) {
@@ -375,6 +477,22 @@ function labelStatus(status) {
   }[status] || "Needs revision";
 }
 
+function labelCategory(category) {
+  return (
+    {
+      formula: "Formula",
+      connector: "Connector",
+      grammar: "Grammar",
+      article: "Article",
+      preposition: "Preposition",
+      tense: "Tense",
+      punctuation: "Punctuation",
+      clarity: "Clarity",
+      style: "Enrichment",
+    }[category] || capitalize(category)
+  );
+}
+
 const COURSE_MATERIALS = {
   "structure-course": {
     title: "Structure course",
@@ -386,7 +504,7 @@ const COURSE_MATERIALS = {
   },
   connectors: {
     title: "Connector sheet",
-    body: "Cause: because, since, as. Result: so, therefore, thus. Contrast: but, however, yet. Concession: although, even though. Clarification: in other words.",
+    body: "Cohesive devices work by job. Cause explains why. Result shows consequence. Contrast turns against an idea. Concession admits a point before countering. Clarification restates the thought.",
   },
   "future-lessons": {
     title: "Future lessons",

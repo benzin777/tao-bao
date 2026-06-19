@@ -7,12 +7,11 @@ test("createTask keeps level and support separate", () => {
     lesson: "structure",
     level: 3,
     support: "easy",
-    styleModes: ["academic", "layered"],
   });
 
   assert.equal(task.config.level, 3);
   assert.equal(task.config.support, "easy");
-  assert.deepEqual(task.config.styleModes, ["academic", "layered"]);
+  assert.equal("styleModes" in task.config, false);
   assert.equal(task.formulaLabel, "Concession -> cause -> result -> conclusion");
   assert.equal(task.scaffold, "Although ___, because ___, ___; therefore, ___.");
 });
@@ -31,7 +30,6 @@ test("normalizeConfig removes removed user-facing controls", () => {
     lesson: "structure",
     level: 2,
     support: "hard",
-    styleModes: ["formal", "concise"],
   });
 });
 

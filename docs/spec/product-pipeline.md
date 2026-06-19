@@ -38,14 +38,14 @@ Tao Dao
 | Lesson | Mode | The grammar/logical system being trained. |
 | Structure Level | Complexity | The linguistic sophistication required. |
 | Support | Scaffolding | How much help the app gives before the learner writes. |
-| Style Changes | Optional operator | One or more style-change modes; if none are selected, Tao Dao chooses the useful upgrade itself. |
+| Hint Groups | Learning aid | Cohesive-device groups the learner can open while writing. |
 | Task | Prompt | A constrained instruction produced from the selected lesson settings. |
 | Attempt | Learner output | The learner's sentence, kept as the baseline. |
 | Result | Feedback surface | Formula fit, correction, explanation, upgrade, and rewrite request. |
 | Revision | New attempt | Learner response after feedback. |
 | Chat Shell | Surface | The full-screen AI chat that contains the lesson loop. |
-| Input Dock | Control Origin | Text input plus mode/plus/send controls. |
-| Mode Drawer | Control Sheet | Lesson, level, support, and optional style changes. |
+| Input Dock | Control Origin | Text input plus mode, hint, and send controls. |
+| Mode Drawer | Control Sheet | Lesson, level, and support. |
 | Page Drawer | Navigation | Course material, lesson subpages, saved writing later, and later projects. |
 
 ## Core Session Flow
@@ -54,14 +54,14 @@ Tao Dao
 1. Select Lesson
 2. Select Structure Level
 3. Select Support
-4. Optionally select one or more style changes
-5. Generate Task
+4. Generate Task
+5. Open hints if needed
 6. Learner Writes Attempt
 7. Submit
 8. Formula Check
 9. Grammar/Mechanics Check
 10. Logic/Fluency Check
-11. Style changes suggested
+11. Automatic enrichment suggested when useful
 12. Learner Revises
 13. Pass / Retry / Next Task
 ```
@@ -73,7 +73,7 @@ Tao Dao
 | Lesson | Structure | Only Structure in MVP. |
 | Level | 1, 2, 3 | Complexity of logical relation stack. |
 | Support | Easy, Normal, Hard | Amount of scaffolding. Not the same as Level. |
-| Style changes | Clearer, Formal, Academic, Creative, Concise, Layered | Optional multi-select. Not required because Tao Dao can infer enrichment itself. |
+| Hint | Device groups | Opens current-task devices plus the general cohesion inventory. Not a setting. |
 
 ## Interface Shell
 
@@ -101,7 +101,7 @@ The app can later add desktop rails, but the mobile mental model remains the sou
 ### Attempt Block
 
 - Learner sentence as submitted.
-- Highlighted spans for formula, grammar, punctuation, connector placement, and style.
+- Highlighted spans for formula, grammar, punctuation, connector placement, and enrichment.
 - Hover/click issue details.
 
 ### Feedback Stack
@@ -111,19 +111,12 @@ Ordered cards:
 1. Formula Fit
 2. Required Fixes
 3. Logic Upgrade
-4. Style Action
+4. Automatic Enrichment
 5. Rewrite Prompt
 
-### Style Actions
+### Automatic Enrichment
 
-Optional transformations:
-
-- More direct.
-- More formal.
-- More academic.
-- More creative.
-- More concise.
-- More layered.
+Optional rewrite improvements selected by Tao Dao after formula fit and required fixes are handled. These are not learner settings.
 
 ### Revision Input
 
@@ -134,7 +127,7 @@ The learner rewrites in the bottom chat input. The system compares the revision 
 The first result must not behave like a generic proofreader. Feedback order is fixed:
 
 ```text
-Formula fit > target lesson errors > blocking grammar > fluency > style enrichment
+Formula fit > target lesson errors > blocking grammar > fluency > optional enrichment
 ```
 
 ## Data Contract Draft
@@ -143,13 +136,11 @@ Formula fit > target lesson errors > blocking grammar > fluency > style enrichme
 type LessonMode = "structure";
 type StructureLevel = 1 | 2 | 3;
 type SupportLevel = "easy" | "normal" | "hard";
-type StyleMode = "clearer" | "formal" | "academic" | "creative" | "concise" | "layered";
 
 interface SessionConfig {
   lesson: LessonMode;
   level: StructureLevel;
   support: SupportLevel;
-  styleModes: StyleMode[];
 }
 
 interface FormulaStep {
@@ -209,7 +200,7 @@ interface AttemptResult {
   };
   issues: FeedbackIssue[];
   correctedSentence: string;
-  upgradedVariants: Record<StyleMode, string>;
+  upgradedVariants: string[];
   rewriteInstruction: string;
 }
 ```

@@ -13,7 +13,7 @@ Level and Support must stay separate.
 ```text
 Level = how complex the target sentence structure is.
 Support = how much scaffolding the learner receives.
-Style changes = optional presentation changes requested after the structure is correct.
+Hints = cohesive-device groups the learner can consult while writing.
 ```
 
 ## Structure Levels

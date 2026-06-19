@@ -12,7 +12,7 @@ The result surface must borrow the evidence structure of Grammarly, LanguageTool
 The sentence is the source of truth.
 The formula is the first judge.
 The feedback rail explains what to do next.
-Style actions enrich only after the required lesson is satisfied.
+Rewrite enrichment appears only after the required lesson is addressed.
 ```
 
 ## Layout
@@ -27,7 +27,7 @@ Assistant result message
   formula fit
   required fix
   upgrade
-  style options
+  rewrite options
   rewrite instruction
 Bottom input dock
 ```
@@ -69,7 +69,7 @@ Highlight categories:
 | Punctuation | Mechanical punctuation | Amber/yellow marker. |
 | Articles/Prepositions/Tense | Targeted grammar modules later | Specific category label; not active in MVP except when blocking. |
 | Clarity | Hard to follow | Blue or neutral highlight, not always an error. |
-| Style | Optional improvement | Purple or muted accent. |
+| Enrichment | Optional improvement | Muted accent; never louder than formula feedback. |
 
 Rule: formula feedback must be visibly separated from generic grammar feedback.
 
@@ -91,30 +91,21 @@ Cards appear in fixed order:
    - Explains how the sentence could argue more clearly.
    - Only shown after formula fit is partial or passed.
 
-4. **Style / Creativity**
+4. **Automatic Enrichment**
    - Optional refinement.
    - Preserves learner's baseline idea.
 
 5. **Rewrite Task**
    - One specific instruction for the next attempt.
 
-## Style Actions
+## Automatic Enrichment
 
-Style changes are actions, not judgments.
+Enrichment is selected by Tao Dao, not by learner settings.
 
-Initial actions:
-
-- Make clearer.
-- Make more formal.
-- Make more academic.
-- Make more creative.
-- Make more concise.
-- Make more layered.
-
-Style-action rules:
+Enrichment rules:
 
 - Never replace the learner's original by default.
-- Never present style options before required fixes unless collapsed behind an action.
+- Never present rewrite options before required fixes unless collapsed behind an action.
 - Always explain what changed in one line.
 
 ## Scoring
@@ -156,7 +147,7 @@ Feedback should become more explicit only when needed:
 If an attempt passes:
 
 - Show a concise success state.
-- Still offer one stronger style option.
+- Still offer one stronger rewrite option when useful.
 - Move to next task or ask for a harder support setting.
 
 If there are no grammar issues but formula fails:
