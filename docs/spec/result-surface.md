@@ -2,9 +2,9 @@
 
 ## Objective
 
-Design the result page as a familiar writing-feedback surface, adapted for lesson mastery.
+Design the result state as a familiar writing-feedback surface inside the mobile AI chat, adapted for lesson mastery.
 
-The result surface must feel closer to Grammarly, LanguageTool, Hemingway, and Write & Improve than to a chatbot transcript. It should show evidence, not just advice.
+The result surface must borrow the evidence structure of Grammarly, LanguageTool, Hemingway, and Write & Improve without becoming a separate report page in MVP. It should appear as a structured assistant message that can expand into details.
 
 ## Core Principle
 
@@ -17,29 +17,31 @@ The variant strip enriches only after the required lesson is satisfied.
 
 ## Layout
 
-### Desktop
+### Mobile Chat
 
 ```text
-Top session bar
----------------------------------------------------------
-| Attempt editor / annotated sentence | Feedback rail   |
-|                                     |                 |
-| Revision input                      | Variant strip   |
----------------------------------------------------------
+Assistant task message
+Learner attempt message
+Assistant result message
+  status line
+  formula fit
+  required fix
+  upgrade
+  variants
+  rewrite instruction
+Bottom input dock
 ```
 
-### Mobile
+### Desktop Adaptation
 
 ```text
-Top session bar
-Annotated sentence
-Formula result
-Required fixes
-Revision input
-Variants collapsed under a tab/sheet
+Left rail: pages/projects
+Center: chat thread
+Right rail: expanded feedback inspector
+Bottom: input dock
 ```
 
-No nested cards. Use panels, rails, rows, and progressive disclosure.
+No nested cards. Use messages, panels, rails, rows, and progressive disclosure.
 
 ## Top Session Bar
 
@@ -52,7 +54,7 @@ Shows:
 - Formula target
 - Status: Passed / Needs Revision / Off Formula
 
-The top bar is informational. It should not look like a marketing hero.
+In mobile chat, this can be a compact status line inside the assistant result message. It should not look like a marketing hero.
 
 ## Annotated Sentence Panel
 
@@ -72,7 +74,7 @@ Highlight categories:
 
 Rule: formula feedback must be visibly separated from generic grammar feedback.
 
-## Feedback Rail
+## Feedback Stack
 
 Cards appear in fixed order:
 
@@ -97,7 +99,7 @@ Cards appear in fixed order:
 5. **Rewrite Task**
    - One specific instruction for the next attempt.
 
-## Variant Strip
+## Variant Strip / Actions
 
 Variants are actions, not judgments.
 
@@ -113,7 +115,7 @@ Initial actions:
 Variant rules:
 
 - Never replace the learner's original by default.
-- Never present variants before required fixes.
+- Never present variants before required fixes unless collapsed behind an action.
 - Always explain what changed in one line.
 
 ## Scoring
@@ -170,6 +172,7 @@ If there are no grammar issues but formula fails:
 - No decorative gradients or gamified badges.
 - Cards only for individual feedback items, not nested page sections.
 - Dense but readable product surface.
+- Familiar mobile chat behavior first; Webstar-like restraint second.
 
 ## Accessibility
 
@@ -178,4 +181,3 @@ If there are no grammar issues but formula fails:
 - Keyboard users must move from issue to issue.
 - Popovers must have deterministic focus behavior.
 - Revision input must preserve submitted attempt history.
-

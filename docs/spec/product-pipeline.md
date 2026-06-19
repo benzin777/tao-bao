@@ -6,6 +6,8 @@ Create a mode-based English sentence construction workbench for learners who wan
 
 The first product is not a broad AI tutor. It is a constrained practice loop for sentence structure.
 
+The primary interface is a full-screen AI chat. The lesson engine lives inside chat turns and compact drawers, not a traditional education dashboard.
+
 ## Borrowed Product Method
 
 ```text
@@ -16,13 +18,17 @@ Ecosystem -> Classification -> Surface -> Implementation
 
 ```text
 Tao Dao
-`-- Lesson System
-    `-- Structure Mode
-        `-- Session
-            `-- Task
-            `-- Attempt
-            `-- Result
-            `-- Revision
+`-- Chat Shell
+    |-- Input Dock
+    |-- Mode Drawer
+    |-- Page / Project Drawer
+    `-- Lesson System
+        `-- Structure Mode
+            `-- Session
+                `-- Task
+                `-- Attempt
+                `-- Result Message
+                `-- Revision
 ```
 
 ## Classification
@@ -38,6 +44,10 @@ Tao Dao
 | Attempt | Learner output | The learner's sentence, kept as the baseline. |
 | Result | Feedback surface | Formula fit, correction, explanation, upgrade, and rewrite request. |
 | Revision | New attempt | Learner response after feedback. |
+| Chat Shell | Surface | The full-screen AI chat that contains the lesson loop. |
+| Input Dock | Control Origin | Text input plus mode/plus/send controls. |
+| Mode Drawer | Control Sheet | Lesson, level, support, quantity, and variant settings. |
+| Page Drawer | Navigation | Pages, docs, saved writing, and later projects. |
 
 ## Core Session Flow
 
@@ -68,22 +78,36 @@ Tao Dao
 | Quantity | 1, 3, 5 | Session length. |
 | Variant | Neutral, Formal, Academic, Creative | Controls enrichment, not correction. |
 
-## Result Page Anatomy
+## Interface Shell
 
-### Header
+The MVP surface is chat-first:
+
+```text
+Top-left menu -> pages/projects/docs
+Main display  -> AI chat
+Bottom dock   -> input, plus, mode, send
+Mode drawer   -> slides from the input dock
+Result        -> structured assistant message inside chat
+```
+
+The app can later add desktop rails, but the mobile mental model remains the source of truth.
+
+## Result Message Anatomy
+
+### Header / Status Line
 
 - Current lesson.
 - Level and support.
 - Formula target.
 - Status: Passed / Needs Revision / Off Formula.
 
-### Attempt Panel
+### Attempt Block
 
 - Learner sentence as submitted.
 - Highlighted spans for formula, grammar, punctuation, connector placement, and style.
 - Hover/click issue details.
 
-### Feedback Rail
+### Feedback Stack
 
 Ordered cards:
 
@@ -104,9 +128,9 @@ Optional transformations:
 - More concise.
 - More layered.
 
-### Revision Box
+### Revision Input
 
-The learner rewrites the same sentence. The system compares the revision against the original attempt and prior feedback.
+The learner rewrites in the bottom chat input. The system compares the revision against the original attempt and prior feedback.
 
 ## Feedback Priority
 
@@ -197,6 +221,7 @@ interface AttemptResult {
 ## Non-Goals For MVP
 
 - No live browser-extension correction.
+- No separate education dashboard before the chat shell works.
 - No speech/pronunciation.
 - No broad essay grading.
 - No full CEFR placement test.
