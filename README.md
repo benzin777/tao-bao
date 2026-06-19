@@ -4,7 +4,17 @@ Private local research and product spec for a mode-based English sentence constr
 
 ## Status
 
-This repository is a product/spec shell. No application framework has been selected yet.
+This repository now contains the V0 app shell and server.
+
+Run it with:
+
+```bash
+cp .env.example .env
+# add OPENAI_API_KEY to .env
+npm start
+```
+
+The default model is `gpt-5.5`. The API key stays server-side; the browser only calls local `/api/*` endpoints.
 
 ## Product Thesis
 
@@ -46,3 +56,10 @@ No live correction in the first build. The first loop is submit-based:
 ```text
 Select mode -> receive task -> write attempt -> submit -> result -> revise -> resubmit
 ```
+
+## API Notes
+
+- `POST /api/task` creates the current Structure Mode task.
+- `POST /api/evaluate` sends the learner attempt to OpenAI through the server.
+- `GET /api/health` reports whether the server has an OpenAI key configured.
+- `OPENAI_REASONING_EFFORT` defaults to `high` for quality; set it to `xhigh` only if slower, more expensive responses are acceptable.
