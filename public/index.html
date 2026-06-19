@@ -22,8 +22,8 @@
       <main class="chat" id="chat" aria-live="polite"></main>
 
       <form class="input-dock" id="inputForm">
-        <button class="plus-button" id="modeButton" type="button" aria-label="Open mode controls">
-          <span aria-hidden="true">+</span>
+        <button class="mode-button" id="modeButton" type="button" aria-label="Open mode controls">
+          <span aria-hidden="true">Mode</span>
         </button>
         <label class="composer-shell">
           <span class="sr-only">Write your sentence</span>
@@ -39,22 +39,26 @@
       <div class="drawer-head">
         <div>
           <strong>Pages</strong>
-          <span>Writing spaces</span>
+          <span>Course material</span>
         </div>
         <button class="icon-button subtle" id="closePageDrawer" type="button" aria-label="Close pages">×</button>
       </div>
       <nav class="page-list">
-        <button class="page-row active" type="button">
-          <strong>Current session</strong>
-          <span>Structure drills</span>
+        <button class="page-row active" type="button" data-material="structure-course">
+          <strong>Structure course</strong>
+          <span>How relation stacks work</span>
         </button>
-        <button class="page-row" type="button">
-          <strong>Free writing</strong>
-          <span>Draft anything</span>
+        <button class="page-row" type="button" data-material="level-map">
+          <strong>Level map</strong>
+          <span>Level 1, 2, and 3</span>
         </button>
-        <button class="page-row" type="button">
-          <strong>Formula notes</strong>
-          <span>Connectors and examples</span>
+        <button class="page-row" type="button" data-material="connectors">
+          <strong>Connector sheet</strong>
+          <span>Cause, result, contrast</span>
+        </button>
+        <button class="page-row" type="button" data-material="future-lessons">
+          <strong>Future lessons</strong>
+          <span>Prepositions and tenses later</span>
         </button>
       </nav>
     </aside>
@@ -64,9 +68,17 @@
       <div class="sheet-head">
         <div>
           <strong>Mode</strong>
-          <span>Structure practice</span>
+          <span>Choose what the chat should train</span>
         </div>
         <button class="icon-button subtle" id="closeModeSheet" type="button" aria-label="Close mode controls">×</button>
+      </div>
+
+      <div class="control-group">
+        <label>Lesson</label>
+        <div class="lesson-pill">
+          <strong>Structure</strong>
+          <span>Sentence logic and relation stacking</span>
+        </div>
       </div>
 
       <div class="control-group">
@@ -87,32 +99,20 @@
         </div>
       </div>
 
-      <div class="control-row">
-        <div class="control-group compact">
-          <label for="quantitySelect">Quantity</label>
-          <select id="quantitySelect">
-            <option value="1">1</option>
-            <option value="3">3</option>
-            <option value="5">5</option>
-          </select>
-        </div>
-        <div class="control-group compact">
-          <label for="variantSelect">Variant</label>
-          <select id="variantSelect">
-            <option value="neutral">Neutral</option>
-            <option value="formal">Formal</option>
-            <option value="academic">Academic</option>
-            <option value="creative">Creative</option>
-          </select>
-        </div>
-      </div>
-
       <div class="control-group">
-        <label for="formulaSelect">Formula</label>
-        <select id="formulaSelect"></select>
+        <label>Style changes</label>
+        <div class="style-grid" id="styleModes">
+          <button type="button" data-style="clearer">Clearer</button>
+          <button type="button" data-style="formal">Formal</button>
+          <button type="button" data-style="academic">Academic</button>
+          <button type="button" data-style="creative">Creative</button>
+          <button type="button" data-style="concise">Concise</button>
+          <button type="button" data-style="layered">Layered</button>
+        </div>
+        <p class="control-note">Optional. Pick one, many, or none. If none are selected, Tao Dao chooses the useful upgrade itself.</p>
       </div>
 
-      <div class="formula-preview" id="formulaPreview"></div>
+      <div class="mode-preview" id="modePreview"></div>
 
       <button class="start-button" id="startTaskButton" type="button">Start task</button>
     </section>
@@ -122,4 +122,3 @@
     <script type="module" src="/app.js"></script>
   </body>
 </html>
-

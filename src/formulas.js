@@ -125,16 +125,9 @@ export function normalizeConfig(config = {}) {
   const lesson = config.lesson === "structure" ? "structure" : "structure";
   const level = normalizeInteger(config.level, [1, 2, 3], 1);
   const support = ["easy", "normal", "hard"].includes(config.support) ? config.support : "easy";
-  const quantity = normalizeInteger(config.quantity, [1, 3, 5], 1);
-  const variant = ["neutral", "formal", "academic", "creative"].includes(config.variant)
-    ? config.variant
-    : "neutral";
-  const formulaId =
-    typeof config.formulaId === "string" && getFormulaById(config.formulaId)
-      ? config.formulaId
-      : undefined;
+  const styleModes = normalizeStyleModes(config.styleModes);
 
-  return { lesson, level, support, quantity, variant, formulaId };
+  return { lesson, level, support, styleModes };
 }
 
 export function getFormulaById(formulaId) {
@@ -151,8 +144,7 @@ export function getFormulasByLevel(level) {
 
 export function createTask(inputConfig = {}) {
   const config = normalizeConfig(inputConfig);
-  const formula = config.formulaId ? getFormulaById(config.formulaId) : getDefaultFormula(config.level);
-  const selectedFormula = formula || getDefaultFormula(config.level);
+  const selectedFormula = getDefaultFormula(config.level);
 
   return {
     id: `task-${Date.now()}`,
@@ -170,15 +162,19 @@ export function createTask(inputConfig = {}) {
 }
 
 function createInstruction(config, formula) {
+  const styleInstruction = config.styleModes.length
+    ? ` Apply these style changes after the structure is correct: ${config.styleModes.join(", ")}.`
+    : " Choose any useful style upgrade yourself after the structure is correct.";
+
   if (config.support === "easy") {
-    return `Write one sentence using ${formula.label}. Fill the frame without changing the formula.`;
+    return `Write one sentence using the selected structure. Fill the frame without changing the logic.${styleInstruction}`;
   }
 
   if (config.support === "normal") {
-    return `Write one sentence using this structure: ${formula.label}.`;
+    return `Write one sentence using the selected level ${config.level} structure.${styleInstruction}`;
   }
 
-  return `Make this idea sound intelligent and logically connected: "${formula.sourceIdea}" Use the selected level ${config.level} structure without being shown the frame.`;
+  return `Make this idea sound intelligent and logically connected: "${formula.sourceIdea}" Use the selected level ${config.level} structure without being shown the frame.${styleInstruction}`;
 }
 
 function normalizeInteger(value, allowed, fallback) {
@@ -186,3 +182,8 @@ function normalizeInteger(value, allowed, fallback) {
   return allowed.includes(parsed) ? parsed : fallback;
 }
 
+function normalizeStyleModes(value) {
+  const allowed = new Set(["clearer", "formal", "academic", "creative", "concise", "layered"]);
+  if (!Array.isArray(value)) return [];
+  return [...new Set(value.filter((item) => allowed.has(item)))];
+}

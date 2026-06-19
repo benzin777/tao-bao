@@ -13,7 +13,7 @@ Level and Support must stay separate.
 ```text
 Level = how complex the target sentence structure is.
 Support = how much scaffolding the learner receives.
-Quantity = how many attempts the learner must produce.
+Style changes = optional presentation changes requested after the structure is correct.
 ```
 
 ## Structure Levels
@@ -173,4 +173,3 @@ An attempt passes when:
 - There are no blocking grammar errors.
 - The sentence is understandable without the correction.
 - The final rewrite can preserve the learner's baseline idea.
-

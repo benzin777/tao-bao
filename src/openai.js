@@ -82,6 +82,8 @@ function createSystemPrompt() {
     "Evaluate the learner's attempt against the selected lesson formula before judging style.",
     "Preserve the learner's baseline idea and voice. Do not replace it with generic academic prose.",
     "Return only the structured output requested by the API schema.",
+    "The user no longer selects formulas, quantity, or a single style variant. The app selects the formula internally from level/support.",
+    "If task.config.styleModes contains values, make rewritten options reflect those selected style changes. If it is empty, infer the most useful options yourself.",
     "If the input is unrelated, too short, or cannot satisfy the task, mark the formula as failed and give one concrete rewrite instruction.",
     "Feedback priority: formula fit, target connector use, blocking grammar, fluency, optional enrichment.",
     "For every issue, use exact character offsets against attemptText. If an issue is sentence-level, use startIndex 0, endIndex attemptText.length, original attemptText, and action rewrite.",

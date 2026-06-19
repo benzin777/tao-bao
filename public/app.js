@@ -3,11 +3,8 @@ const state = {
     lesson: "structure",
     level: 1,
     support: "easy",
-    quantity: 1,
-    variant: "neutral",
-    formulaId: "",
+    styleModes: [],
   },
-  formulas: [],
   task: null,
   messages: [],
   isEvaluating: false,
@@ -23,10 +20,8 @@ const elements = {
   pageDrawer: document.querySelector("#pageDrawer"),
   modeSheet: document.querySelector("#modeSheet"),
   scrim: document.querySelector("#scrim"),
-  formulaSelect: document.querySelector("#formulaSelect"),
-  formulaPreview: document.querySelector("#formulaPreview"),
-  quantitySelect: document.querySelector("#quantitySelect"),
-  variantSelect: document.querySelector("#variantSelect"),
+  modePreview: document.querySelector("#modePreview"),
+  styleModes: document.querySelector("#styleModes"),
 };
 
 document.querySelector("#menuButton").addEventListener("click", () => openDrawer(elements.pageDrawer));
@@ -37,16 +32,19 @@ document.querySelector("#startTaskButton").addEventListener("click", startTask);
 elements.scrim.addEventListener("click", closeOverlays);
 elements.form.addEventListener("submit", submitAttempt);
 elements.composer.addEventListener("input", autoSizeComposer);
-elements.quantitySelect.addEventListener("change", (event) => {
-  state.config.quantity = Number(event.target.value);
-  updateSubtitle();
+elements.styleModes.addEventListener("click", (event) => {
+  const button = event.target.closest("button[data-style]");
+  if (!button) return;
+
+  const style = button.dataset.style;
+  const selected = new Set(state.config.styleModes);
+  if (selected.has(style)) selected.delete(style);
+  else selected.add(style);
+  state.config.styleModes = [...selected];
+  syncControls();
 });
-elements.variantSelect.addEventListener("change", (event) => {
-  state.config.variant = event.target.value;
-});
-elements.formulaSelect.addEventListener("change", (event) => {
-  state.config.formulaId = event.target.value;
-  updateFormulaPreview();
+document.querySelectorAll("[data-material]").forEach((button) => {
+  button.addEventListener("click", () => openMaterial(button.dataset.material));
 });
 
 document.querySelectorAll(".segmented").forEach((group) => {
@@ -56,7 +54,6 @@ document.querySelectorAll(".segmented").forEach((group) => {
     const field = group.dataset.field;
     const value = button.dataset.value;
     state.config[field] = field === "level" ? Number(value) : value;
-    if (field === "level") syncFormulaSelect();
     syncControls();
     updateSubtitle();
   });
@@ -66,7 +63,6 @@ init();
 
 async function init() {
   await checkHealth();
-  await loadFormulas();
   syncControls();
   await startTask();
 }
@@ -89,17 +85,9 @@ async function checkHealth() {
   }
 }
 
-async function loadFormulas() {
-  const data = await getJson("/api/formulas?level=1");
-  state.formulas = data.formulas || [];
-  state.config.formulaId = state.formulas[0]?.id || "";
-  syncFormulaSelect();
-}
-
 async function startTask() {
   closeOverlays();
   const data = await postJson("/api/task", { config: state.config });
-  state.formulas = data.formulas || state.formulas;
   state.task = data.task;
   state.config = { ...state.task.config };
   syncControls();
@@ -192,6 +180,7 @@ function renderMessages() {
 function renderMessage(message) {
   if (message.kind === "task") return renderTaskMessage(message.task);
   if (message.kind === "result") return renderResultMessage(message.attemptText, message.result);
+  if (message.kind === "material") return renderMaterialMessage(message);
   if (message.kind === "error") return `<article class="message assistant"><p>${escapeHtml(message.content)}</p></article>`;
   if (message.kind === "loading") return `<article class="message assistant loading"><p>${escapeHtml(message.content)}</p></article>`;
   if (message.role === "user") return `<article class="message user"><p>${escapeHtml(message.content)}</p></article>`;
@@ -199,18 +188,36 @@ function renderMessage(message) {
 }
 
 function renderTaskMessage(task) {
+  const styleLabel = task.config.styleModes?.length
+    ? task.config.styleModes.map(capitalize).join(", ")
+    : "Auto style";
   return `
     <article class="message assistant">
       <div class="message-head">
         <span class="chip primary">Structure</span>
         <span class="chip">Level ${task.config.level}</span>
         <span class="chip">${capitalize(task.config.support)}</span>
+        <span class="chip">${escapeHtml(styleLabel)}</span>
       </div>
       <p>${escapeHtml(task.instruction)}</p>
       <div class="formula-box">
         <strong>${escapeHtml(task.formulaLabel)}</strong>
         ${task.scaffold ? `<code>${escapeHtml(task.scaffold)}</code>` : ""}
         <p>${escapeHtml(task.sourceIdea)}</p>
+      </div>
+    </article>
+  `;
+}
+
+function renderMaterialMessage(message) {
+  return `
+    <article class="message assistant">
+      <div class="message-head">
+        <span class="chip primary">Course</span>
+      </div>
+      <div class="formula-box">
+        <strong>${escapeHtml(message.title)}</strong>
+        <p>${escapeHtml(message.content)}</p>
       </div>
     </article>
   `;
@@ -263,7 +270,7 @@ function renderVariant(variant) {
       <strong>${escapeHtml(capitalize(variant.variant))}</strong>
       <p>${escapeHtml(variant.sentence)}</p>
       <p>${escapeHtml(variant.changeNote)}</p>
-      <button type="button" data-use-variant="${escapeHtml(variant.sentence)}">Use variant</button>
+      <button type="button" data-use-variant="${escapeHtml(variant.sentence)}">Use sentence</button>
     </div>
   `;
 }
@@ -292,34 +299,17 @@ function syncControls() {
       button.classList.toggle("active", String(state.config[field]) === String(button.dataset.value));
     });
   });
-  elements.quantitySelect.value = String(state.config.quantity);
-  elements.variantSelect.value = state.config.variant;
-  syncFormulaSelect();
-  updateFormulaPreview();
+  elements.styleModes.querySelectorAll("button[data-style]").forEach((button) => {
+    button.classList.toggle("active", state.config.styleModes.includes(button.dataset.style));
+  });
+  updateModePreview();
 }
 
-function syncFormulaSelect() {
-  const formulas = state.formulas.filter((formula) => formula.level === Number(state.config.level));
-  if (!formulas.some((formula) => formula.id === state.config.formulaId)) {
-    state.config.formulaId = formulas[0]?.id || state.config.formulaId;
-  }
-  elements.formulaSelect.innerHTML = formulas
-    .map((formula) => `<option value="${escapeHtml(formula.id)}">${escapeHtml(formula.label)}</option>`)
-    .join("");
-  elements.formulaSelect.value = state.config.formulaId;
-  updateFormulaPreview();
-}
-
-function updateFormulaPreview() {
-  const formula = state.formulas.find((item) => item.id === state.config.formulaId);
-  if (!formula) return;
-  const supportLine =
-    state.config.support === "easy"
-      ? formula.easyScaffold
-      : state.config.support === "normal"
-        ? formula.label
-        : formula.sourceIdea;
-  elements.formulaPreview.textContent = supportLine;
+function updateModePreview() {
+  const styleText = state.config.styleModes.length
+    ? `Style changes: ${state.config.styleModes.map(capitalize).join(", ")}.`
+    : "Style changes: auto.";
+  elements.modePreview.textContent = `Structure · Level ${state.config.level} · ${capitalize(state.config.support)}. ${styleText}`;
 }
 
 function updateSubtitle() {
@@ -339,6 +329,17 @@ function closeOverlays() {
     drawer.setAttribute("aria-hidden", "true");
   });
   elements.scrim.hidden = true;
+}
+
+function openMaterial(material) {
+  closeOverlays();
+  const content = COURSE_MATERIALS[material] || COURSE_MATERIALS["structure-course"];
+  addMessage({
+    role: "assistant",
+    kind: "material",
+    title: content.title,
+    content: content.body,
+  });
 }
 
 function autoSizeComposer() {
@@ -374,6 +375,25 @@ function labelStatus(status) {
   }[status] || "Needs revision";
 }
 
+const COURSE_MATERIALS = {
+  "structure-course": {
+    title: "Structure course",
+    body: "Structure Mode trains relation stacking. Level 1 makes one logical move. Level 2 combines two moves. Level 3 builds a layered argument that sets up, qualifies, and resolves an idea.",
+  },
+  "level-map": {
+    title: "Level map",
+    body: "Level 1 is one relation: because -> result. Level 2 is a chain: if -> result -> addition. Level 3 is an argument: although -> because -> therefore.",
+  },
+  connectors: {
+    title: "Connector sheet",
+    body: "Cause: because, since, as. Result: so, therefore, thus. Contrast: but, however, yet. Concession: although, even though. Clarification: in other words.",
+  },
+  "future-lessons": {
+    title: "Future lessons",
+    body: "Next lesson families will be prepositions/articles and tenses. They should use the same chat shell, but each needs its own academic knowledge base and correction contract.",
+  },
+};
+
 function capitalize(value) {
   const text = String(value || "");
   return text ? text.charAt(0).toUpperCase() + text.slice(1) : "";
@@ -387,4 +407,3 @@ function escapeHtml(value) {
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&#039;");
 }
-

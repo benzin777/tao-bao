@@ -20,7 +20,7 @@ The default model is `gpt-5.5`. The API key stays server-side; the browser only 
 
 Build a constrained writing practice workbench, not a generic grammar chatbot.
 
-The learner selects a lesson mode, structure level, support level, and quantity. The app assigns a task, the learner writes a sentence, and the result page checks the attempt against the selected linguistic formula before correcting grammar or style.
+The learner selects a lesson mode, structure level, and support level. Optional style-change modes can be selected together. The app assigns the exact formula internally, the learner writes a sentence, and the result checks the attempt against that formula before correcting grammar or style.
 
 ## Borrowed Discipline
 
@@ -47,8 +47,7 @@ First mode only:
 Lesson: Structure
 Level: 1 / 2 / 3
 Support: Easy / Normal / Hard
-Quantity: 1 / 3 / 5 attempts
-Variant: neutral / formal / academic / creative
+Style changes: optional multi-select / auto if none selected
 ```
 
 No live correction in the first build. The first loop is submit-based:

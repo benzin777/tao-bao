@@ -1,20 +1,38 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { createTask, getFormulasByLevel, normalizeAttempt, validateAndRepairEvaluation } from "../src/evaluator.js";
+import { createTask, getFormulasByLevel, normalizeAttempt, normalizeConfig, validateAndRepairEvaluation } from "../src/evaluator.js";
 
 test("createTask keeps level and support separate", () => {
   const task = createTask({
     lesson: "structure",
     level: 3,
     support: "easy",
-    quantity: 1,
-    variant: "academic",
+    styleModes: ["academic", "layered"],
   });
 
   assert.equal(task.config.level, 3);
   assert.equal(task.config.support, "easy");
+  assert.deepEqual(task.config.styleModes, ["academic", "layered"]);
   assert.equal(task.formulaLabel, "Concession -> cause -> result -> conclusion");
   assert.equal(task.scaffold, "Although ___, because ___, ___; therefore, ___.");
+});
+
+test("normalizeConfig removes removed user-facing controls", () => {
+  const config = normalizeConfig({
+    level: 2,
+    support: "hard",
+    quantity: 5,
+    variant: "creative",
+    formulaId: "contrast",
+    styleModes: ["formal", "formal", "unknown", "concise"],
+  });
+
+  assert.deepEqual(config, {
+    lesson: "structure",
+    level: 2,
+    support: "hard",
+    styleModes: ["formal", "concise"],
+  });
 });
 
 test("formulas can be selected by level", () => {
@@ -119,4 +137,3 @@ test("validateAndRepairEvaluation converts bad offsets into sentence-level feedb
   assert.equal(repaired.issues[0].startIndex, 0);
   assert.equal(repaired.issues[0].endIndex, attempt.length);
 });
-

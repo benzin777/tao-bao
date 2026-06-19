@@ -38,16 +38,15 @@ Tao Dao
 | Lesson | Mode | The grammar/logical system being trained. |
 | Structure Level | Complexity | The linguistic sophistication required. |
 | Support | Scaffolding | How much help the app gives before the learner writes. |
-| Quantity | Workload | Number of attempts in the session. |
-| Variant | Style target | Neutral, formal, academic, or creative enrichment. |
+| Style Changes | Optional operator | One or more style-change modes; if none are selected, Tao Dao chooses the useful upgrade itself. |
 | Task | Prompt | A constrained instruction produced from the selected lesson settings. |
 | Attempt | Learner output | The learner's sentence, kept as the baseline. |
 | Result | Feedback surface | Formula fit, correction, explanation, upgrade, and rewrite request. |
 | Revision | New attempt | Learner response after feedback. |
 | Chat Shell | Surface | The full-screen AI chat that contains the lesson loop. |
 | Input Dock | Control Origin | Text input plus mode/plus/send controls. |
-| Mode Drawer | Control Sheet | Lesson, level, support, quantity, and variant settings. |
-| Page Drawer | Navigation | Pages, docs, saved writing, and later projects. |
+| Mode Drawer | Control Sheet | Lesson, level, support, and optional style changes. |
+| Page Drawer | Navigation | Course material, lesson subpages, saved writing later, and later projects. |
 
 ## Core Session Flow
 
@@ -55,17 +54,16 @@ Tao Dao
 1. Select Lesson
 2. Select Structure Level
 3. Select Support
-4. Select Quantity
-5. Select Variant
-6. Generate Task
-7. Learner Writes Attempt
-8. Submit
-9. Formula Check
-10. Grammar/Mechanics Check
-11. Logic/Fluency Check
-12. Variants Suggested
-13. Learner Revises
-14. Pass / Retry / Next Task
+4. Optionally select one or more style changes
+5. Generate Task
+6. Learner Writes Attempt
+7. Submit
+8. Formula Check
+9. Grammar/Mechanics Check
+10. Logic/Fluency Check
+11. Style changes suggested
+12. Learner Revises
+13. Pass / Retry / Next Task
 ```
 
 ## MVP Controls
@@ -75,17 +73,16 @@ Tao Dao
 | Lesson | Structure | Only Structure in MVP. |
 | Level | 1, 2, 3 | Complexity of logical relation stack. |
 | Support | Easy, Normal, Hard | Amount of scaffolding. Not the same as Level. |
-| Quantity | 1, 3, 5 | Session length. |
-| Variant | Neutral, Formal, Academic, Creative | Controls enrichment, not correction. |
+| Style changes | Clearer, Formal, Academic, Creative, Concise, Layered | Optional multi-select. Not required because Tao Dao can infer enrichment itself. |
 
 ## Interface Shell
 
 The MVP surface is chat-first:
 
 ```text
-Top-left menu -> pages/projects/docs
+Top-left menu -> course pages / lessons
 Main display  -> AI chat
-Bottom dock   -> input, plus, mode, send
+Bottom dock   -> mode, input, send
 Mode drawer   -> slides from the input dock
 Result        -> structured assistant message inside chat
 ```
@@ -114,10 +111,10 @@ Ordered cards:
 1. Formula Fit
 2. Required Fixes
 3. Logic Upgrade
-4. Style Variant
+4. Style Action
 5. Rewrite Prompt
 
-### Variant Strip
+### Style Actions
 
 Optional transformations:
 
@@ -146,14 +143,13 @@ Formula fit > target lesson errors > blocking grammar > fluency > style enrichme
 type LessonMode = "structure";
 type StructureLevel = 1 | 2 | 3;
 type SupportLevel = "easy" | "normal" | "hard";
-type Variant = "neutral" | "formal" | "academic" | "creative";
+type StyleMode = "clearer" | "formal" | "academic" | "creative" | "concise" | "layered";
 
 interface SessionConfig {
   lesson: LessonMode;
   level: StructureLevel;
   support: SupportLevel;
-  quantity: 1 | 3 | 5;
-  variant: Variant;
+  styleModes: StyleMode[];
 }
 
 interface FormulaStep {
@@ -213,7 +209,7 @@ interface AttemptResult {
   };
   issues: FeedbackIssue[];
   correctedSentence: string;
-  upgradedVariants: Record<Variant | "concise" | "layered", string>;
+  upgradedVariants: Record<StyleMode, string>;
   rewriteInstruction: string;
 }
 ```

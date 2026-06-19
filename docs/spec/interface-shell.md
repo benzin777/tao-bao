@@ -23,7 +23,6 @@ Main surface
 
 Bottom dock
   input
-  plus button
   mode control
   send action
 ```
@@ -46,11 +45,10 @@ The bottom dock contains:
 
 - Text input.
 - Send button.
-- Plus button for adding/opening tools.
 - Mode button for current lesson settings.
-- Small active formula readout when a lesson is running.
+- Small active lesson readout when a lesson is running.
 
-The dock is the primary control origin. It should feel close to the Webstar plus-button/action style: restrained, Apple-like, cyan used only for active/primary state.
+The dock is the primary control origin. The old plus affordance is treated as a mode control, not a generic add button.
 
 ## Mode Drawer
 
@@ -63,13 +61,12 @@ It controls:
 | Lesson | Structure first |
 | Level | 1 / 2 / 3 |
 | Support | Easy / Normal / Hard |
-| Quantity | 1 / 3 / 5 |
-| Variant | Neutral / Formal / Academic / Creative |
+| Style changes | Optional multi-select: clearer, formal, academic, creative, concise, layered |
 
 Mode Drawer rules:
 
-- Use toggles, segmented controls, steppers, and compact selectors.
-- Show the formula preview directly in the drawer.
+- Use toggles, segmented controls, and compact multi-select chips.
+- Do not expose formula choice in the drawer; Tao Dao chooses the exact formula from level/support.
 - Do not bury the learner in settings.
 - Close the drawer back into the dock when a task starts.
 
@@ -105,20 +102,20 @@ It can expand into:
 - Formula fit.
 - Required fix.
 - Upgraded sentence.
-- Variant options.
+- Style-change options.
 - Rewrite prompt.
 
 On mobile, this replaces the classic desktop result page.
 
 ## Top-Left Menu
 
-The top-left menu opens a page/project drawer.
+The top-left menu opens a course/pages drawer.
 
 The drawer contains:
 
-- Current lesson session.
-- Pages.
-- Research/spec docs.
+- Course material.
+- Lesson subpages.
+- Connector sheets.
 - Saved attempts later.
 - Future projects/workspaces.
 
@@ -126,17 +123,16 @@ This is not the main practice control. It is navigation and storage.
 
 ## Pages
 
-Pages are free-form writing spaces inside Tao Dao.
+Pages begin as educational material inside Tao Dao.
 
 Use cases:
 
-- Write anything.
-- Store lesson notes.
-- Draft examples.
-- Open specs or references.
+- Open lesson notes.
+- Read connector/course sheets.
+- Store examples later.
 - Later, run a selected page through a lesson mode.
 
-Pages are separate from live lesson attempts. A lesson attempt is a structured event; a page is a flexible writing object.
+Pages are separate from live lesson attempts. A lesson attempt is a structured event; a page is an educational/course object first.
 
 ## Desktop Adaptation
 
@@ -154,7 +150,7 @@ But desktop should still preserve the same mental model:
 ```text
 Chat is primary.
 Mode controls belong to the input.
-Pages belong to the top-left menu / left rail.
+Course pages belong to the top-left menu / left rail.
 Result feedback belongs to the chat turn.
 ```
 
@@ -165,7 +161,7 @@ Result feedback belongs to the chat turn.
 - Do not make the menu the lesson engine.
 - Do not make the mode drawer a heavy settings page.
 - Do not split the product into disconnected pages before the chat loop works.
-- Use familiar chat affordances, then add Tao Dao specificity through the formula/mode controls.
+- Use familiar chat affordances, then add Tao Dao specificity through mode controls and structured feedback.
 
 ## MVP Shell
 
@@ -184,4 +180,3 @@ Later:
 - Lesson history.
 - Learner performance profile.
 - Export/share.
-

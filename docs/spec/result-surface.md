@@ -12,7 +12,7 @@ The result surface must borrow the evidence structure of Grammarly, LanguageTool
 The sentence is the source of truth.
 The formula is the first judge.
 The feedback rail explains what to do next.
-The variant strip enriches only after the required lesson is satisfied.
+Style actions enrich only after the required lesson is satisfied.
 ```
 
 ## Layout
@@ -27,7 +27,7 @@ Assistant result message
   formula fit
   required fix
   upgrade
-  variants
+  style options
   rewrite instruction
 Bottom input dock
 ```
@@ -50,7 +50,6 @@ Shows:
 - Lesson: Structure
 - Level: 1 / 2 / 3
 - Support: Easy / Normal / Hard
-- Quantity progress: 1 of 3
 - Formula target
 - Status: Passed / Needs Revision / Off Formula
 
@@ -99,9 +98,9 @@ Cards appear in fixed order:
 5. **Rewrite Task**
    - One specific instruction for the next attempt.
 
-## Variant Strip / Actions
+## Style Actions
 
-Variants are actions, not judgments.
+Style changes are actions, not judgments.
 
 Initial actions:
 
@@ -112,10 +111,10 @@ Initial actions:
 - Make more concise.
 - Make more layered.
 
-Variant rules:
+Style-action rules:
 
 - Never replace the learner's original by default.
-- Never present variants before required fixes unless collapsed behind an action.
+- Never present style options before required fixes unless collapsed behind an action.
 - Always explain what changed in one line.
 
 ## Scoring
@@ -157,7 +156,7 @@ Feedback should become more explicit only when needed:
 If an attempt passes:
 
 - Show a concise success state.
-- Still offer one stronger variant.
+- Still offer one stronger style option.
 - Move to next task or ask for a harder support setting.
 
 If there are no grammar issues but formula fails:
