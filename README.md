@@ -1,4 +1,4 @@
-# English Construction Workbench
+# Tao Dao
 
 Private local research and product spec for a mode-based English sentence construction tutor.
 
@@ -46,4 +46,3 @@ No live correction in the first build. The first loop is submit-based:
 ```text
 Select mode -> receive task -> write attempt -> submit -> result -> revise -> resubmit
 ```
-

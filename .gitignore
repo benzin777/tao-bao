@@ -8,4 +8,6 @@ build/
 !.env.example
 coverage/
 *.log
+.tao-dao-server.pid
+.tao-dao-server.log
 

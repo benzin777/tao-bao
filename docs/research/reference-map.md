@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This document prevents reinvention. Each product stage should map to an existing proven pattern, then be adapted to the English Construction Workbench.
+This document prevents reinvention. Each product stage should map to an existing proven pattern, then be adapted to Tao Dao.
 
 ## Source References
 
@@ -56,4 +56,3 @@ The result page must answer in this order:
 - LanguageTool writing goals: https://languagetool.org/insights/post/writing-goals/
 - CEFR level descriptions: https://www.coe.int/en/web/common-european-framework-reference-languages/level-descriptions
 - CEFR Companion Volume: https://www.educarex.es/pub/cont/com/0059/documentos/CEFR-Companion_Volume_with_new_descriptors_-_2018.docx.pdf
-
