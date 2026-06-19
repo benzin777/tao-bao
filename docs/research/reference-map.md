@@ -17,6 +17,10 @@ This document prevents reinvention. Each product stage should map to an existing
 | Inline implementation | TextChecker | Suggestion object with original/replacement/explanation/type/start/end; underlines; popovers; issue panel; apply/ignore; stats. | Do not copy browser-extension assumptions. This is an in-app workbench first. |
 | Minimal correction strictness | Open Grammarly | Conservative correction prompt, mode, aggressiveness/support, chunking, validation of indices. | Do not let AI rewrite correct sentences just to sound smarter. |
 | Prompt commands | Scramble | Reusable text actions such as fix, improve, simplify, expand. | Transform these into lesson variants, not free-floating writing utilities. |
+| Readability highlights | Hemingway Editor | Highlight sentence complexity separately from grammar. Make hard-to-read status visible without pretending it is always an error. | Do not make "simple" the goal. Level 3 sentences may be complex on purpose. |
+| Writing reports | ProWritingAid | Summary report first, then specific reports such as grammar, style, sentence structure, sentence length, transition, and readability. | Do not expose 25 reports in MVP. Use the concept of drill-down, not the full report suite. |
+| In-place commands | QuillBot | Correction plus contextual commands: rewrite, expand, simplify, change tone, preserve workflow. | Do not make paraphrasing the core. Variants are secondary after formula fit. |
+| Writing statistics | LanguageTool | Track writing productivity and most common error types over time. | Do not build learner outfit/progress profile until the lesson loop is proven. |
 | Academic structure | CEFR Companion Volume | Coherence/cohesion grows from basic connectors to controlled use of cohesive devices and organisational patterns. | Do not reduce CEFR to a badge system in MVP. |
 | Pedagogy | Graduated corrective feedback / ICALL research | Move from general hint to explicit correction only as needed; make the learner self-correct. | Do not immediately replace the learner's sentence with a perfect answer. |
 
@@ -43,6 +47,13 @@ The result page must answer in this order:
 - TextChecker repo: https://github.com/codextde/textchecker
 - Open Grammarly repo: https://github.com/Aaryan6/open-grammarly
 - Scramble repo: https://github.com/zlwaterfield/scramble
+- Hemingway highlighted issues: https://hemingwayapp.com/help/docs/highlighted-issues
+- ProWritingAid reports: https://prowritingaid.com/features/writing-reports
+- ProWritingAid style report: https://help.prowritingaid.com/article/353-how-to-use-the-writing-style-report
+- QuillBot grammar checker: https://quillbot.com/grammar-check
+- LanguageTool editor features: https://languagetool.org/insights/post/languagetool-text-editor/
+- LanguageTool statistics: https://languagetool.org/insights/post/statistics-feature/
+- LanguageTool writing goals: https://languagetool.org/insights/post/writing-goals/
 - CEFR level descriptions: https://www.coe.int/en/web/common-european-framework-reference-languages/level-descriptions
 - CEFR Companion Volume: https://www.educarex.es/pub/cont/com/0059/documentos/CEFR-Companion_Volume_with_new_descriptors_-_2018.docx.pdf
 
