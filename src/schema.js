@@ -105,7 +105,7 @@ const feedbackIssueSchema = {
         "tense",
         "punctuation",
         "clarity",
-        "style",
+        "enrichment",
       ],
     },
     severity: {

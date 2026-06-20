@@ -488,7 +488,7 @@ function labelCategory(category) {
       tense: "Tense",
       punctuation: "Punctuation",
       clarity: "Clarity",
-      style: "Enrichment",
+      enrichment: "Enrichment",
     }[category] || capitalize(category)
   );
 }

@@ -120,7 +120,7 @@ The evaluator should check:
 
 ### If Formula Fails
 
-Do not lead with style. Lead with the missing relation.
+Do not lead with polish. Lead with the missing relation.
 
 Example:
 

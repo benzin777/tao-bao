@@ -178,7 +178,7 @@ interface FeedbackIssue {
     | "tense"
     | "punctuation"
     | "clarity"
-    | "style";
+    | "enrichment";
   severity: "blocking" | "warning" | "suggestion";
   original: string;
   replacement?: string;
@@ -196,7 +196,7 @@ interface AttemptResult {
     formula: number;
     correctness: number;
     fluency: number;
-    style: number;
+    enrichment: number;
   };
   issues: FeedbackIssue[];
   correctedSentence: string;

@@ -87,7 +87,7 @@ interface FeedbackIssue {
     | "tense"
     | "punctuation"
     | "clarity"
-    | "style";
+    | "enrichment";
   severity: "blocking" | "warning" | "suggestion";
   original: string;
   replacement?: string;
@@ -106,7 +106,7 @@ Before rendering, the application must validate:
 1. `original` equals `attemptText.slice(startIndex, endIndex)`.
 2. Index ranges are non-overlapping or intentionally grouped.
 3. Required formula issues have a `relationId`.
-4. Blocking issues appear before optional style issues.
+4. Blocking issues appear before optional enrichment issues.
 5. Variants do not contradict the selected formula.
 6. Corrected sentence preserves the learner's baseline idea.
 
@@ -118,7 +118,7 @@ The evaluator must not:
 
 - Turn every answer into a long essay.
 - Rewrite correct sentences only for taste.
-- Praise style before formula fit.
+- Praise enrichment before formula fit.
 - Replace the learner's voice with generic academic prose.
 - Hide the selected formula.
 - Use unsupported labels.
@@ -145,4 +145,3 @@ Reason:
 - Formula fit is the product's core and existing grammar engines do not understand the lesson formula.
 - Grammar engines can be added later as a second pass.
 - The submit-based flow reduces the risk of live correction latency and bad underlines.
-

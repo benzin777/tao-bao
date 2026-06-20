@@ -93,13 +93,15 @@ function repairIssue(issue, index, attemptText) {
     };
   }
 
+  const category = coerceEnum(
+    issue?.category,
+    ["formula", "connector", "grammar", "article", "preposition", "tense", "punctuation", "clarity", "enrichment"],
+    "formula",
+  );
+
   return {
     id: coerceText(issue?.id, `issue-${index}`),
-    category: coerceEnum(
-      issue?.category,
-      ["formula", "connector", "grammar", "article", "preposition", "tense", "punctuation", "clarity", "style"],
-      "formula",
-    ),
+    category,
     severity: coerceEnum(issue?.severity, ["blocking", "warning", "suggestion"], "warning"),
     original,
     replacement: coerceText(issue?.replacement, ""),
@@ -135,4 +137,3 @@ function coerceText(value, fallback) {
 function severityOrder(severity) {
   return { blocking: 0, warning: 1, suggestion: 2 }[severity] ?? 3;
 }
-

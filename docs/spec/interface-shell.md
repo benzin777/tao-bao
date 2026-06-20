@@ -112,7 +112,7 @@ It can expand into:
 - Formula fit.
 - Required fix.
 - Upgraded sentence.
-- Style-change options.
+- Rewrite options.
 - Rewrite prompt.
 
 On mobile, this replaces the classic desktop result page.
