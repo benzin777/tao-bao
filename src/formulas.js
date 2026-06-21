@@ -11,8 +11,7 @@ export const STRUCTURE_FORMULAS = [
     level: 1,
     label: "Cause -> result",
     steps: [
-      relationStep("cause", ["because", "as", "since"]),
-      relationStep("result", ["so", "therefore", "thus"]),
+      relationStep("cause", ["because", "as", "since", "so", "therefore", "thus"]),
     ],
     easyScaffold: "Because ___, ___.",
     sourceIdea: "Practice makes improvement visible.",
@@ -155,6 +154,7 @@ export function createTask(inputConfig = {}) {
     formulaId: selectedFormula.id,
     formulaLabel: selectedFormula.label,
     sourceIdea: selectedFormula.sourceIdea,
+    evaluationGuidance: createEvaluationGuidance(selectedFormula),
     instruction: createInstruction(config, selectedFormula),
     scaffold: config.support === "easy" ? selectedFormula.easyScaffold : "",
   };
@@ -175,4 +175,12 @@ function createInstruction(config, formula) {
 function normalizeInteger(value, allowed, fallback) {
   const parsed = Number(value);
   return allowed.includes(parsed) ? parsed : fallback;
+}
+
+function createEvaluationGuidance(formula) {
+  if (formula.id === "cause-result") {
+    return "This level 1 task asks for one cause-result link. Accept either 'Because ___, ___.' or '___, so ___.' Do not require both because and so in the same simple sentence.";
+  }
+
+  return "";
 }

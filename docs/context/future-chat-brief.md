@@ -18,6 +18,7 @@ It began as an English learning concept for mastering selected failure modules, 
 - `npm test` passed after the latest app change.
 - Public preview previously used a Cloudflare quick tunnel pointing to `127.0.0.1:8789`, but tunnel URLs are temporary and should be re-verified before use.
 - OpenAI key is not configured on this machine unless the user adds `.env`.
+- The app default model is `gpt-5.4-mini` with low reasoning effort for interactive tutor latency; slower models can be tested intentionally through `.env`.
 
 ## Current App
 

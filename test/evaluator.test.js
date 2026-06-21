@@ -16,6 +16,19 @@ test("createTask keeps level and support separate", () => {
   assert.equal(task.scaffold, "Although ___, because ___, ___; therefore, ___.");
 });
 
+test("level 1 cause-result accepts one cause-result connector contract", () => {
+  const task = createTask({
+    lesson: "structure",
+    level: 1,
+    support: "easy",
+  });
+
+  assert.equal(task.formulaLabel, "Cause -> result");
+  assert.equal(task.formula.length, 1);
+  assert.deepEqual(task.formula[0].expectedMarkers, ["because", "as", "since", "so", "therefore", "thus"]);
+  assert.match(task.evaluationGuidance, /Accept either/);
+});
+
 test("normalizeConfig removes removed user-facing controls", () => {
   const config = normalizeConfig({
     level: 2,

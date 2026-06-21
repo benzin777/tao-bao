@@ -12,7 +12,7 @@ The product is not a generic grammar chatbot. It is a constrained writing workbe
 - Remote reachability: GitHub currently returns `Repository not found` from this shell, so the repo may need to be created or credentials may need to be added.
 - Runtime: no-framework Node server plus static mobile UI
 - API provider: OpenAI Responses API through the local server
-- Default model: `gpt-5.5`
+- Default model: `gpt-5.4-mini`
 - OpenAI key status on this machine: not configured unless `.env` contains `OPENAI_API_KEY`
 
 ## Quick Start
@@ -50,9 +50,10 @@ Create `.env` from `.env.example`.
 
 ```text
 OPENAI_API_KEY=...
-OPENAI_MODEL=gpt-5.5
-OPENAI_REASONING_EFFORT=high
+OPENAI_MODEL=gpt-5.4-mini
+OPENAI_REASONING_EFFORT=low
 PORT=8789
+OPENAI_TIMEOUT_MS=45000
 ```
 
 The API key stays server-side. The browser only calls local `/api/*` endpoints.

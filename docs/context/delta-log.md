@@ -162,3 +162,18 @@ Movement:
 Decision:
 
 - The project identity is `tao-dao`; `tao-bao` was a remote naming mistake and should not be carried forward. If GitHub access fails, fix repo creation or credentials instead of reverting the name.
+
+## 2026-06-21 - Interactive Evaluation Repair
+
+Commit: pending at the time this entry was written.
+
+Movement:
+
+- Switched the local/default evaluator model from `gpt-5.5` high reasoning to `gpt-5.4-mini` low reasoning for tutor-like latency.
+- Added client and server timeouts so evaluation cannot leave the chat stuck forever.
+- Exposed safe evaluator errors instead of collapsing every upstream failure into `Server error.`
+- Repaired the Level 1 cause-result contract so `Because ___, ___.` and `___, so ___.` are both valid one-link answers instead of contradictory requirements.
+
+Decision:
+
+- The MVP should feel like an interactive practice loop first. Slower frontier models can be tested deliberately through `.env`, but the default local path should prioritize fast feedback and coherent lesson rules.

@@ -173,13 +173,29 @@ async function submitAttempt(event) {
     kind: "loading",
     content: "Checking formula, grammar, and logic...",
   });
+  const loadingTimers = [
+    setTimeout(() => {
+      updateMessage(loadingId, {
+        content: "Still checking. The evaluator can take a few seconds on the first pass...",
+      });
+    }, 8000),
+    setTimeout(() => {
+      updateMessage(loadingId, {
+        content: "Still working. This model is slow; the app will show the result or a timeout.",
+      });
+    }, 22000),
+  ];
 
   try {
-    const data = await postJson("/api/evaluate", {
-      config: state.config,
-      task: state.task,
-      attemptText,
-    });
+    const data = await postJson(
+      "/api/evaluate",
+      {
+        config: state.config,
+        task: state.task,
+        attemptText,
+      },
+      { timeoutMs: 60000 },
+    );
     replaceMessage(loadingId, {
       role: "assistant",
       kind: "result",
@@ -193,6 +209,7 @@ async function submitAttempt(event) {
       content: error.message || "Evaluation failed.",
     });
   } finally {
+    loadingTimers.forEach(clearTimeout);
     setEvaluating(false);
   }
 }
@@ -213,6 +230,14 @@ function replaceMessage(id, nextMessage) {
   const index = state.messages.findIndex((message) => message.id === id);
   if (index !== -1) {
     state.messages[index] = { ...nextMessage, id };
+    renderMessages();
+  }
+}
+
+function updateMessage(id, patch) {
+  const index = state.messages.findIndex((message) => message.id === id);
+  if (index !== -1) {
+    state.messages[index] = { ...state.messages[index], ...patch };
     renderMessages();
   }
 }
@@ -449,24 +474,53 @@ function insertDevice(device) {
   elements.composer.focus();
 }
 
-async function getJson(path) {
-  const response = await fetch(path);
-  const data = await response.json();
+async function getJson(path, options = {}) {
+  const response = await fetchWithTimeout(path, {}, options.timeoutMs);
+  const data = await parseJsonResponse(response);
   if (!response.ok) throw new Error(data.error || "Request failed.");
   return data;
 }
 
-async function postJson(path, body) {
-  const response = await fetch(path, {
+async function postJson(path, body, options = {}) {
+  const response = await fetchWithTimeout(path, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify(body),
-  });
-  const data = await response.json();
+  }, options.timeoutMs);
+  const data = await parseJsonResponse(response);
   if (!response.ok) throw new Error(data.error || "Request failed.");
   return data;
+}
+
+async function fetchWithTimeout(path, options, timeoutMs = 20000) {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), timeoutMs);
+
+  try {
+    return await fetch(path, {
+      ...options,
+      signal: controller.signal,
+    });
+  } catch (error) {
+    if (error?.name === "AbortError") {
+      throw new Error("The evaluator took too long. Try again with a shorter sentence.");
+    }
+    throw error;
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
+async function parseJsonResponse(response) {
+  try {
+    return await response.json();
+  } catch {
+    return {
+      error: "The server returned an unreadable response.",
+    };
+  }
 }
 
 function labelStatus(status) {

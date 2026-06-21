@@ -43,6 +43,7 @@ const server = http.createServer(async (request, response) => {
           apiKey: runtime.openaiApiKey,
           model: runtime.openaiModel,
           reasoningEffort: runtime.reasoningEffort,
+          timeoutMs: runtime.openaiTimeoutMs,
         },
       });
 
