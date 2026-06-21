@@ -44,7 +44,7 @@ export async function evaluateWithOpenAI({ apiKey, model, reasoningEffort, timeo
   };
 
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), timeoutMs || 45000);
+  const timeout = setTimeout(() => controller.abort(), timeoutMs || 90000);
 
   let response;
   try {
@@ -60,7 +60,7 @@ export async function evaluateWithOpenAI({ apiKey, model, reasoningEffort, timeo
   } catch (fetchError) {
     const error = new Error(
       fetchError?.name === "AbortError"
-        ? "Evaluator timed out. Try again, or use a faster model in .env."
+        ? "Evaluator timed out. Try again with a shorter sentence, or lower OPENAI_REASONING_EFFORT in .env."
         : "Evaluator request failed. Check the OpenAI key and network connection.",
     );
     error.statusCode = fetchError?.name === "AbortError" ? 504 : 502;
@@ -103,9 +103,21 @@ function createSystemPrompt() {
     "Evaluate the learner's attempt against the selected lesson formula before judging enrichment.",
     "Preserve the learner's baseline idea and voice. Do not replace it with generic academic prose.",
     "Return only the structured output requested by the API schema.",
+    "Use English only.",
+    "Teacher style: concise spoken drill. Correct immediately, explain the exact construction in one practical micro-lesson, then ask the learner to rewrite now.",
+    "Do not write transcript labels, long essays, or generic chatbot encouragement.",
     "The user does not select formulas, quantity, rewrite variants, tones, or presentation modes. The app selects the formula internally from level/support.",
     "Infer any useful rewrite options yourself only after the formula fit is addressed.",
+    "Lesson pack: Structure Mode trains logical links between clauses. Formula fit is first. Required relations and connector placement matter before polish.",
+    "Level 1 is one relation, Level 2 chains two relation moves, Level 3 builds a layered argument.",
     "For level 1 cause-result tasks, accept one clear cause-result link. A cause-led frame like 'Because ___, ___.' and a result-led frame like '___, so ___.' are both valid; do not require both markers in the same simple sentence.",
+    "Grammar pack: mark blocking article, tense/aspect, preposition, punctuation, spelling, capitalization, and contraction errors as issues, not as optional enrichment.",
+    "Article rule pack: use 'the' for a specific or already-known singular/plural noun; use 'a/an' for a new or non-specific singular count noun; use no article for plural/general ideas when appropriate.",
+    "Tense rule pack: use present continuous for actions happening now or temporary current actions; use present simple for habits and general truths; in real condition clauses, use present simple in the if-clause and will/can/may in the result clause when needed.",
+    "Russian-speaker watchlist: missing articles before singular count nouns, wrong present simple vs continuous, literal word order, missing auxiliary verbs, and overusing direct translation.",
+    "teacherTurn.correction must repeat correctedSentence exactly.",
+    "teacherTurn.microLesson must explain the specific error or construction, not merely say the sentence is better.",
+    "teacherTurn.rewritePrompt must ask the learner to rewrite the sentence now so it can be checked again.",
     "If the input is unrelated, too short, or cannot satisfy the task, mark the formula as failed and give one concrete rewrite instruction.",
     "Feedback priority: formula fit, target connector use, blocking grammar, fluency, optional enrichment.",
     "For every issue, use exact character offsets against attemptText. If an issue is sentence-level, use startIndex 0, endIndex attemptText.length, original attemptText, and action rewrite.",

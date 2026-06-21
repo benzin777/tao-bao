@@ -88,6 +88,7 @@ document.querySelector("#startTaskButton").addEventListener("click", startTask);
 elements.scrim.addEventListener("click", closeOverlays);
 elements.form.addEventListener("submit", submitAttempt);
 elements.composer.addEventListener("input", autoSizeComposer);
+elements.composer.addEventListener("keydown", submitOnEnter);
 elements.deviceGroups.addEventListener("click", (event) => {
   const button = event.target.closest("button[data-device]");
   if (!button) return;
@@ -176,14 +177,14 @@ async function submitAttempt(event) {
   const loadingTimers = [
     setTimeout(() => {
       updateMessage(loadingId, {
-        content: "Still checking. The evaluator can take a few seconds on the first pass...",
+        content: "Still checking. The quality model can take a few seconds on the first pass...",
       });
     }, 8000),
     setTimeout(() => {
       updateMessage(loadingId, {
-        content: "Still working. This model is slow; the app will show the result or a timeout.",
+        content: "Still working. I will show the result or a timeout instead of leaving the chat stuck.",
       });
-    }, 22000),
+    }, 28000),
   ];
 
   try {
@@ -194,7 +195,7 @@ async function submitAttempt(event) {
         task: state.task,
         attemptText,
       },
-      { timeoutMs: 60000 },
+      { timeoutMs: 95000 },
     );
     replaceMessage(loadingId, {
       role: "assistant",
@@ -212,6 +213,12 @@ async function submitAttempt(event) {
     loadingTimers.forEach(clearTimeout);
     setEvaluating(false);
   }
+}
+
+function submitOnEnter(event) {
+  if (event.key !== "Enter" || event.shiftKey || event.isComposing) return;
+  event.preventDefault();
+  elements.form.requestSubmit();
 }
 
 function setEvaluating(value) {
@@ -297,31 +304,46 @@ function renderMaterialMessage(message) {
 }
 
 function renderResultMessage(attemptText, result) {
-  const statusClass = result.status === "passed" ? "success" : "warning";
   const issues = result.issues || [];
   const variants = result.variants || [];
+  const teacherTurn = result.teacherTurn || {};
+  const hasRequiredIssues = issues.some((issue) => issue.severity !== "suggestion" && issue.category !== "enrichment");
+  const visibleVariants = hasRequiredIssues ? [] : variants;
 
   return `
     <article class="message assistant">
       <div class="result-stack">
-        <div class="message-head">
-          <span class="chip ${statusClass}">${labelStatus(result.status)}</span>
-          <span class="chip">Formula: ${escapeHtml(result.formula?.fit || "partial")}</span>
+        <div class="result-status ${result.status === "passed" ? "success" : "warning"}">
+          ${escapeHtml(resultStatusLine(result, issues))}
         </div>
-        <p>${escapeHtml(result.summary)}</p>
-        <div class="annotated">${annotateText(attemptText, issues)}</div>
+        <div class="sentence-block">${annotateText(attemptText, issues)}</div>
+        <section class="teacher-turn">
+          <strong>${escapeHtml(teacherTurn.line || result.summary)}</strong>
+          ${renderCorrection(attemptText, teacherTurn.correction || result.correctedSentence)}
+          <p>${escapeHtml(teacherTurn.microLesson || result.formula?.explanation || result.summary)}</p>
+        </section>
         <section class="issue-list">
-          ${issues.length ? issues.map(renderIssue).join("") : `<div class="issue-card"><strong>No required fixes</strong><p>The structure can move to enrichment.</p></div>`}
+          ${issues.length ? issues.map(renderIssue).join("") : ""}
         </section>
         <section class="variant-list">
-          ${variants.map(renderVariant).join("")}
+          ${visibleVariants.map(renderVariant).join("")}
         </section>
-        <div class="formula-box">
-          <strong>Rewrite</strong>
-          <p>${escapeHtml(result.nextInstruction)}</p>
+        <div class="rewrite-cue">
+          <strong>Now write it properly.</strong>
+          <p>${escapeHtml(teacherTurn.rewritePrompt || result.nextInstruction)}</p>
         </div>
       </div>
     </article>
+  `;
+}
+
+function renderCorrection(attemptText, correctedSentence) {
+  if (!correctedSentence || sameText(attemptText, correctedSentence)) return "";
+  return `
+    <div class="correction-block">
+      <span>Correction</span>
+      <p>${escapeHtml(correctedSentence)}</p>
+    </div>
   `;
 }
 
@@ -358,7 +380,7 @@ function annotateText(text, issues) {
   for (const issue of ordered) {
     if (issue.startIndex < cursor) continue;
     output += escapeHtml(text.slice(cursor, issue.startIndex));
-    output += `<span class="mark ${escapeHtml(issue.category)}" title="${escapeHtml(issue.explanation)}">${escapeHtml(text.slice(issue.startIndex, issue.endIndex))}</span>`;
+    output += `<span class="mark ${escapeHtml(issue.category)}" tabindex="0" title="${escapeHtml(issue.explanation)}" aria-label="${escapeHtml(labelCategory(issue.category))}: ${escapeHtml(issue.explanation)}">${escapeHtml(text.slice(issue.startIndex, issue.endIndex))}</span>`;
     cursor = issue.endIndex;
   }
   output += escapeHtml(text.slice(cursor));
@@ -482,19 +504,23 @@ async function getJson(path, options = {}) {
 }
 
 async function postJson(path, body, options = {}) {
-  const response = await fetchWithTimeout(path, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
+  const response = await fetchWithTimeout(
+    path,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body),
     },
-    body: JSON.stringify(body),
-  }, options.timeoutMs);
+    options.timeoutMs,
+  );
   const data = await parseJsonResponse(response);
   if (!response.ok) throw new Error(data.error || "Request failed.");
   return data;
 }
 
-async function fetchWithTimeout(path, options, timeoutMs = 20000) {
+async function fetchWithTimeout(path, options, timeoutMs = 25000) {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), timeoutMs);
 
@@ -505,7 +531,7 @@ async function fetchWithTimeout(path, options, timeoutMs = 20000) {
     });
   } catch (error) {
     if (error?.name === "AbortError") {
-      throw new Error("The evaluator took too long. Try again with a shorter sentence.");
+      throw new Error("The evaluator took too long. Try a shorter sentence, or lower reasoning effort in .env.");
     }
     throw error;
   } finally {
@@ -523,12 +549,11 @@ async function parseJsonResponse(response) {
   }
 }
 
-function labelStatus(status) {
-  return {
-    passed: "Passed",
-    needs_revision: "Needs revision",
-    off_formula: "Off formula",
-  }[status] || "Needs revision";
+function resultStatusLine(result, issues) {
+  if (result.status === "passed" && issues.length) return "Structure passed. Fix the English.";
+  if (result.status === "passed") return "Structure passed.";
+  if (result.formula?.fit === "failed") return "Build the structure first.";
+  return "Almost there. Fix the marked part.";
 }
 
 function labelCategory(category) {
@@ -578,4 +603,8 @@ function escapeHtml(value) {
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&#039;");
+}
+
+function sameText(left, right) {
+  return String(left || "").replace(/\s+/g, " ").trim() === String(right || "").replace(/\s+/g, " ").trim();
 }

@@ -163,17 +163,21 @@ Decision:
 
 - The project identity is `tao-dao`; `tao-bao` was a remote naming mistake and should not be carried forward. If GitHub access fails, fix repo creation or credentials instead of reverting the name.
 
-## 2026-06-21 - Interactive Evaluation Repair
+## 2026-06-21 - Teacher Turn And Input Repair
 
 Commit: pending at the time this entry was written.
 
 Movement:
 
-- Switched the local/default evaluator model from `gpt-5.5` high reasoning to `gpt-5.4-mini` low reasoning for tutor-like latency.
-- Added client and server timeouts so evaluation cannot leave the chat stuck forever.
-- Exposed safe evaluator errors instead of collapsing every upstream failure into `Server error.`
-- Repaired the Level 1 cause-result contract so `Because ___, ___.` and `___, so ___.` are both valid one-link answers instead of contradictory requirements.
+- Kept the quality default on `gpt-5.5` with high reasoning, but added OpenAI/client timeouts so the app does not hang silently.
+- Added an explicit teacher-turn contract with correction, micro-lesson, and rewrite prompt.
+- Changed result rendering away from report-like `Formula: passed` chips toward sentence-first correction inside chat.
+- Added Enter-to-submit while preserving Shift+Enter for a newline.
+- Fixed the composer focus state so the rounded input shell is the focus target.
+- Restored the Level 1 cause-result rule as one cause-result link, not a requirement to use both cause and result markers.
+- Added a repair guard: when the evaluator returns a corrected sentence but no issue, Tao Dao creates a sentence-level grammar issue so real fixes are not treated as optional enrichment.
+- Added request and attempt size limits so bad input cannot silently create oversized evaluator calls.
 
 Decision:
 
-- The MVP should feel like an interactive practice loop first. Slower frontier models can be tested deliberately through `.env`, but the default local path should prioritize fast feedback and coherent lesson rules.
+- The MVP should feel like a live sentence-construction teacher before it grows analytics or progress pages. Loop counts and success pipeline belong later, after the sentence/correction/rewrite loop feels reliable.

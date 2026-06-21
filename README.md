@@ -12,7 +12,7 @@ The product is not a generic grammar chatbot. It is a constrained writing workbe
 - Remote reachability: GitHub currently returns `Repository not found` from this shell, so the repo may need to be created or credentials may need to be added.
 - Runtime: no-framework Node server plus static mobile UI
 - API provider: OpenAI Responses API through the local server
-- Default model: `gpt-5.4-mini`
+- Default model: `gpt-5.5`
 - OpenAI key status on this machine: not configured unless `.env` contains `OPENAI_API_KEY`
 
 ## Quick Start
@@ -50,10 +50,10 @@ Create `.env` from `.env.example`.
 
 ```text
 OPENAI_API_KEY=...
-OPENAI_MODEL=gpt-5.4-mini
-OPENAI_REASONING_EFFORT=low
+OPENAI_MODEL=gpt-5.5
+OPENAI_REASONING_EFFORT=high
 PORT=8789
-OPENAI_TIMEOUT_MS=45000
+OPENAI_TIMEOUT_MS=90000
 ```
 
 The API key stays server-side. The browser only calls local `/api/*` endpoints.
@@ -159,15 +159,22 @@ docs/
 | `POST /api/task` | Creates a Structure Mode task from `lesson`, `level`, and `support`. |
 | `POST /api/evaluate` | Sends the learner attempt to the OpenAI evaluator and returns structured feedback. |
 
+Current guardrails:
+
+- JSON request bodies are limited to 64 KB.
+- Sentence attempts are limited to 800 characters.
+
 ## Feedback Priority
 
-The result must not behave like a generic proofreader.
+The result must not behave like a generic proofreader or a generic chat answer.
 
 ```text
 Formula fit > target lesson errors > blocking grammar > fluency > optional enrichment
 ```
 
 This ordering is the core product difference. A grammatically correct sentence can still fail if it does not satisfy the selected structure.
+
+The assistant turn should stay practical: show the learner sentence, correct immediately when needed, explain the exact construction briefly, then ask for a rewrite.
 
 ## Documentation Map
 

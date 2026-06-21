@@ -23,11 +23,10 @@ Rewrite enrichment appears only after the required lesson is addressed.
 Assistant task message
 Learner attempt message
 Assistant result message
-  status line
-  formula fit
+  sentence block
+  teacher correction
   required fix
-  upgrade
-  rewrite options
+  upgrade when allowed
   rewrite instruction
 Bottom input dock
 ```
@@ -53,7 +52,7 @@ Shows:
 - Formula target
 - Status: Passed / Needs Revision / Off Formula
 
-In mobile chat, this can be a compact status line inside the assistant result message. It should not look like a marketing hero.
+In mobile chat, this can be a compact status line inside the assistant result message. It should not look like a marketing hero or a report header.
 
 ## Annotated Sentence Panel
 
@@ -72,6 +71,19 @@ Highlight categories:
 | Enrichment | Optional improvement | Muted accent; never louder than formula feedback. |
 
 Rule: formula feedback must be visibly separated from generic grammar feedback.
+
+The attempt block is the visual anchor. Avoid report-like labels such as `Formula: passed` when a short teacher line can carry the same information.
+
+## Teacher Turn
+
+The result starts from a concise teacher move:
+
+- one line on whether the structure works,
+- immediate corrected sentence when needed,
+- one micro-lesson explaining the construction or error,
+- one rewrite cue.
+
+This can use spoken-drill cadence, but it should stay in English and should not imitate transcript labels.
 
 ## Feedback Stack
 

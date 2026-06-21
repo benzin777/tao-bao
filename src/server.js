@@ -5,6 +5,7 @@ import { getRuntimeConfig, PUBLIC_DIR } from "./config.js";
 import { createTask, evaluateAttempt, getFormulasByLevel, STRUCTURE_FORMULAS } from "./evaluator.js";
 
 const runtime = getRuntimeConfig();
+const MAX_JSON_BODY_BYTES = 64 * 1024;
 
 const server = http.createServer(async (request, response) => {
   try {
@@ -73,7 +74,16 @@ server.listen(runtime.port, "0.0.0.0", () => {
 
 async function readJson(request) {
   const chunks = [];
-  for await (const chunk of request) chunks.push(chunk);
+  let size = 0;
+  for await (const chunk of request) {
+    size += chunk.length;
+    if (size > MAX_JSON_BODY_BYTES) {
+      const error = new Error("Request body is too large.");
+      error.statusCode = 413;
+      throw error;
+    }
+    chunks.push(chunk);
+  }
   const raw = Buffer.concat(chunks).toString("utf8");
   if (!raw) return {};
 

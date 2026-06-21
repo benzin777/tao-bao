@@ -1,6 +1,13 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { createTask, getFormulasByLevel, normalizeAttempt, normalizeConfig, validateAndRepairEvaluation } from "../src/evaluator.js";
+import {
+  createTask,
+  evaluateAttempt,
+  getFormulasByLevel,
+  normalizeAttempt,
+  normalizeConfig,
+  validateAndRepairEvaluation,
+} from "../src/evaluator.js";
 
 test("createTask keeps level and support separate", () => {
   const task = createTask({
@@ -55,6 +62,21 @@ test("formulas can be selected by level", () => {
 
 test("normalizeAttempt trims and collapses whitespace", () => {
   assert.equal(normalizeAttempt("  If   I commit,\nI grow. "), "If I commit, I grow.");
+});
+
+test("evaluateAttempt rejects oversized sentence attempts before OpenAI", async () => {
+  await assert.rejects(
+    evaluateAttempt({
+      config: { level: 1, support: "easy" },
+      attemptText: "x".repeat(801),
+      openai: {
+        apiKey: "unused",
+        model: "unused",
+        reasoningEffort: "unused",
+      },
+    }),
+    /under 800 characters/,
+  );
 });
 
 test("validateAndRepairEvaluation preserves valid exact-offset issues", () => {
@@ -147,4 +169,89 @@ test("validateAndRepairEvaluation converts bad offsets into sentence-level feedb
   assert.equal(repaired.issues[0].category, "formula");
   assert.equal(repaired.issues[0].startIndex, 0);
   assert.equal(repaired.issues[0].endIndex, attempt.length);
+});
+
+test("validateAndRepairEvaluation keeps formula issues before grammar issues", () => {
+  const task = createTask({ level: 1, support: "easy" });
+  const attempt = "I train because";
+
+  const repaired = validateAndRepairEvaluation(
+    {
+      status: "needs_revision",
+      summary: "Fix the structure.",
+      formula: {
+        fit: "partial",
+        detected: [],
+        missing: [],
+        misplaced: [],
+        explanation: "The result side is missing.",
+      },
+      issues: [
+        {
+          id: "grammar-1",
+          category: "grammar",
+          severity: "blocking",
+          original: "because",
+          replacement: "",
+          explanation: "The connector is stranded.",
+          startIndex: 8,
+          endIndex: 15,
+          relationId: "",
+          action: "rewrite",
+        },
+        {
+          id: "formula-1",
+          category: "formula",
+          severity: "warning",
+          original: attempt,
+          replacement: "",
+          explanation: "Add a result clause.",
+          startIndex: 0,
+          endIndex: attempt.length,
+          relationId: "cause",
+          action: "rewrite",
+        },
+      ],
+      correctedSentence: attempt,
+      variants: [],
+      nextInstruction: "Add the result.",
+    },
+    attempt,
+    task,
+  );
+
+  assert.equal(repaired.issues[0].category, "formula");
+  assert.equal(repaired.issues[1].category, "grammar");
+});
+
+test("validateAndRepairEvaluation surfaces hidden corrected-sentence fixes", () => {
+  const task = createTask({ level: 1, support: "easy" });
+  const attempt = "because im hungry, I eat";
+
+  const repaired = validateAndRepairEvaluation(
+    {
+      status: "passed",
+      summary: "Good cause-result structure.",
+      formula: {
+        fit: "passed",
+        detected: [],
+        missing: [],
+        misplaced: [],
+        explanation: "The cause-result link is present.",
+      },
+      issues: [],
+      correctedSentence: "Because I'm hungry, I eat.",
+      variants: [],
+      nextInstruction: "Rewrite the corrected sentence.",
+    },
+    attempt,
+    task,
+  );
+
+  assert.equal(repaired.status, "passed");
+  assert.equal(repaired.issues.length, 1);
+  assert.equal(repaired.issues[0].category, "grammar");
+  assert.equal(repaired.issues[0].original, attempt);
+  assert.equal(repaired.issues[0].replacement, "Because I'm hungry, I eat.");
+  assert.equal(repaired.teacherTurn.correction, "Because I'm hungry, I eat.");
 });

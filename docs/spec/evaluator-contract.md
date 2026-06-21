@@ -40,6 +40,7 @@ interface EvaluationResponse {
   correctedSentence: string;
   variants: SentenceVariant[];
   nextInstruction: string;
+  teacherTurn: TeacherTurn;
 }
 
 interface FormulaEvaluation {
@@ -68,6 +69,13 @@ interface SentenceVariant {
   variant: "clearer" | "formal" | "academic" | "creative" | "concise" | "layered";
   sentence: string;
   changeNote: string;
+}
+
+interface TeacherTurn {
+  line: string;
+  correction: string;
+  microLesson: string;
+  rewritePrompt: string;
 }
 ```
 
@@ -109,6 +117,7 @@ Before rendering, the application must validate:
 4. Blocking issues appear before optional enrichment issues.
 5. Variants do not contradict the selected formula.
 6. Corrected sentence preserves the learner's baseline idea.
+7. `teacherTurn.correction` matches `correctedSentence`.
 
 If validation fails, the UI should not render faulty inline offsets. It should fall back to sentence-level feedback.
 
@@ -123,6 +132,8 @@ The evaluator must not:
 - Hide the selected formula.
 - Use unsupported labels.
 - Return raw markdown as the only output.
+- Hide real grammar, article, tense, punctuation, or capitalization corrections inside optional rewrite variants.
+- Explain like a generic chatbot instead of giving a concise teacher-style correction and rewrite cue.
 
 ## Prompting Implication
 
@@ -145,3 +156,16 @@ Reason:
 - Formula fit is the product's core and existing grammar engines do not understand the lesson formula.
 - Grammar engines can be added later as a second pass.
 - The submit-based flow reduces the risk of live correction latency and bad underlines.
+
+## Teacher-Turn Rule
+
+The result must feel like a practical spoken drill, not a report.
+
+Required behavior:
+
+1. Correct immediately when the sentence needs a real fix.
+2. Explain the exact construction or error in short English.
+3. Ask the learner to rewrite now so the next attempt can be checked.
+4. Preserve the learner's baseline idea.
+
+The UI can still render issues and variants, but the teacher turn is the primary chat response.

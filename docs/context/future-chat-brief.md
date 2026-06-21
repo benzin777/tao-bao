@@ -17,8 +17,8 @@ It began as an English learning concept for mastering selected failure modules, 
 - Remote reachability: `git ls-remote --heads origin main` currently returns `Repository not found`, so the private repo may need to be created or credentials may need to be added.
 - `npm test` passed after the latest app change.
 - Public preview previously used a Cloudflare quick tunnel pointing to `127.0.0.1:8789`, but tunnel URLs are temporary and should be re-verified before use.
-- OpenAI key is not configured on this machine unless the user adds `.env`.
-- The app default model is `gpt-5.4-mini` with low reasoning effort for interactive tutor latency; slower models can be tested intentionally through `.env`.
+- OpenAI key is configured only when `.env` contains `OPENAI_API_KEY`.
+- The quality default is `gpt-5.5` with high reasoning and `OPENAI_TIMEOUT_MS=90000`; lower these deliberately only when optimizing latency.
 
 ## Current App
 
@@ -106,6 +106,17 @@ Formula fit > target lesson errors > blocking grammar > fluency > optional enric
 
 This ordering is important. Tao Dao is not Grammarly with lessons attached; the lesson formula is the first judge.
 
+### Teacher Turn
+
+The result should feel like a concise spoken drill, not a report:
+
+- show the learner sentence as the object,
+- correct immediately when English is wrong,
+- explain the exact construction or grammar point in short English,
+- ask the learner to rewrite now.
+
+If the model returns a corrected sentence but no issue, the repair layer creates a sentence-level grammar issue so the correction is not hidden as optional enrichment.
+
 ## Academic Frame
 
 Structure Mode is based on:
@@ -157,3 +168,4 @@ If credentials become available, verify or create the private GitHub repo named 
 2. Observe real model output and tune the prompt/schema.
 3. Build richer Structure course pages.
 4. Add saved attempts and progression only after the first loop is stable.
+5. Later, add loop/progress surfaces showing attempts per task and success pipeline; do not build this before the core tutor turn is stable.

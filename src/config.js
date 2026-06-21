@@ -33,8 +33,8 @@ export function getRuntimeConfig() {
   return {
     port: Number(process.env.PORT || 8789),
     openaiApiKey: process.env.OPENAI_API_KEY || "",
-    openaiModel: process.env.OPENAI_MODEL || "gpt-5.4-mini",
-    reasoningEffort: process.env.OPENAI_REASONING_EFFORT || "low",
-    openaiTimeoutMs: Number(process.env.OPENAI_TIMEOUT_MS || 45000),
+    openaiModel: process.env.OPENAI_MODEL || "gpt-5.5",
+    reasoningEffort: process.env.OPENAI_REASONING_EFFORT || "high",
+    openaiTimeoutMs: Number(process.env.OPENAI_TIMEOUT_MS || 90000),
   };
 }

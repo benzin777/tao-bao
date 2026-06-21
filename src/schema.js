@@ -160,6 +160,26 @@ const sentenceVariantSchema = {
   },
 };
 
+const teacherTurnSchema = {
+  type: "object",
+  additionalProperties: false,
+  required: ["line", "correction", "microLesson", "rewritePrompt"],
+  properties: {
+    line: {
+      type: "string",
+    },
+    correction: {
+      type: "string",
+    },
+    microLesson: {
+      type: "string",
+    },
+    rewritePrompt: {
+      type: "string",
+    },
+  },
+};
+
 export const EVALUATION_SCHEMA = {
   type: "object",
   additionalProperties: false,
@@ -171,6 +191,7 @@ export const EVALUATION_SCHEMA = {
     "correctedSentence",
     "variants",
     "nextInstruction",
+    "teacherTurn",
   ],
   properties: {
     status: {
@@ -226,5 +247,6 @@ export const EVALUATION_SCHEMA = {
     nextInstruction: {
       type: "string",
     },
+    teacherTurn: teacherTurnSchema,
   },
 };

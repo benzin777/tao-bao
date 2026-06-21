@@ -41,7 +41,7 @@ Do not run production builds unless a future build system exists and the user ex
 - Static files in `public/`.
 - Local API server in `src/server.js`.
 - Default port: `8789`.
-- Default OpenAI model: `gpt-5.4-mini`.
+- Default OpenAI model: `gpt-5.5`.
 - API key is loaded from `.env` as `OPENAI_API_KEY`.
 
 ## Product Rules
