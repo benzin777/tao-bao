@@ -117,7 +117,8 @@ The app is an AI mobile chat shell.
 ```text
 Top-left menu -> course pages / lessons
 Main display  -> chat
-Bottom dock   -> Mode, Hint, input, send
+Top bar       -> pages, Hint, randomize pattern
+Bottom dock   -> Mode, input, send
 Mode sheet    -> lesson, level, support
 Hint sheet    -> current formula devices plus general device groups
 Result        -> structured assistant message inside chat

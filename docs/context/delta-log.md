@@ -197,3 +197,19 @@ Movement:
 Decision:
 
 - The practice sentence and answer dock should carry the interface. Header metadata is not actionable enough to deserve first-row visual weight in the mobile MVP.
+
+## 2026-06-21 - Random Pattern Control
+
+Commit: pending at the time this entry was written.
+
+Movement:
+
+- Moved Hint from the bottom dock to the top bar.
+- Added a top-bar randomize control for rerolling the current Structure pattern.
+- Changed task creation from fixed first formula to random formula selection inside the selected level.
+- Added backend task metadata for level, pattern index, total patterns in the level, and relation stack.
+- Changed draft task behavior so rerolling or switching mode replaces the current task when the learner has not typed or submitted yet.
+
+Decision:
+
+- The learner still chooses only level/support, but the exact formula should vary. The pattern pool belongs in backend metadata; the UI should show enough of it to prove the task is not a hard-coded default.

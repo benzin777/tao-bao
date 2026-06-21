@@ -75,10 +75,22 @@ The user wanted a Hint button showing groups of cohesive devices that make sense
 
 Implemented:
 
-- Bottom dock `Hint` button.
+- Top-bar `Hint` button.
 - Hint sheet with current task relation groups.
 - General device groups: cause, result, contrast, concession, condition, addition, sequence, clarification, example, conclusion.
 - Tapping a device inserts it into the composer.
+
+### Random Pattern
+
+Structure tasks are selected randomly from the current level's formula pool. The top-bar reroll button asks the backend for a different pattern when the level has alternatives.
+
+Task cards show backend metadata:
+
+- Level.
+- Pattern index and total patterns in the current level.
+- Relation stack.
+
+When the learner has not typed or submitted an attempt, mode changes and rerolls replace the draft task card instead of duplicating it in the chat.
 
 ### Structure Mode
 

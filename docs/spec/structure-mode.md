@@ -116,6 +116,17 @@ The evaluator should check:
 5. The sentence is one sentence unless the task permits multiple.
 6. The learner's meaning is preserved in the correction.
 
+## Formula Selection
+
+The learner does not choose the exact formula. The app selects one pattern from the selected level.
+
+Rules:
+
+- Starting a task can use any formula in that level's formula pool.
+- The randomize control should avoid repeating the current formula when alternatives exist.
+- Task cards should expose backend metadata such as level, pattern position, total patterns in the level, and relation stack.
+- If no learner attempt exists yet, a new task replaces the previous draft task instead of adding a duplicate card.
+
 ## Feedback Behavior
 
 ### If Formula Fails

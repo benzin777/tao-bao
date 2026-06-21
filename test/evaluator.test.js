@@ -10,11 +10,16 @@ import {
 } from "../src/evaluator.js";
 
 test("createTask keeps level and support separate", () => {
-  const task = createTask({
-    lesson: "structure",
-    level: 3,
-    support: "easy",
-  });
+  const task = createTask(
+    {
+      lesson: "structure",
+      level: 3,
+      support: "easy",
+    },
+    {
+      random: () => 0,
+    },
+  );
 
   assert.equal(task.config.level, 3);
   assert.equal(task.config.support, "easy");
@@ -24,16 +29,57 @@ test("createTask keeps level and support separate", () => {
 });
 
 test("level 1 cause-result accepts one cause-result connector contract", () => {
-  const task = createTask({
-    lesson: "structure",
-    level: 1,
-    support: "easy",
-  });
+  const task = createTask(
+    {
+      lesson: "structure",
+      level: 1,
+      support: "easy",
+    },
+    {
+      random: () => 0,
+    },
+  );
 
   assert.equal(task.formulaLabel, "Cause -> result");
   assert.equal(task.formula.length, 1);
   assert.deepEqual(task.formula[0].expectedMarkers, ["because", "as", "since", "so", "therefore", "thus"]);
   assert.match(task.evaluationGuidance, /Accept either/);
+});
+
+test("createTask can select a non-default formula from the selected level", () => {
+  const task = createTask(
+    {
+      lesson: "structure",
+      level: 2,
+      support: "easy",
+    },
+    {
+      random: () => 0.99,
+    },
+  );
+
+  assert.equal(task.config.level, 2);
+  assert.equal(task.formulaLabel, "Contrast -> clarification");
+  assert.equal(task.formulaMeta.formulaIndex, 3);
+  assert.equal(task.formulaMeta.formulaCount, 3);
+});
+
+test("createTask reroll avoids the previous formula when alternatives exist", () => {
+  const task = createTask(
+    {
+      lesson: "structure",
+      level: 1,
+      support: "easy",
+    },
+    {
+      avoidFormulaId: "cause-result",
+      random: () => 0,
+    },
+  );
+
+  assert.equal(task.config.level, 1);
+  assert.notEqual(task.formulaId, "cause-result");
+  assert.equal(task.formulaLabel, "Contrast");
 });
 
 test("normalizeConfig removes removed user-facing controls", () => {

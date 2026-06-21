@@ -29,7 +29,9 @@ const server = http.createServer(async (request, response) => {
     if (url.pathname === "/api/task" && request.method === "POST") {
       const body = await readJson(request);
       return sendJson(response, 200, {
-        task: createTask(body?.config),
+        task: createTask(body?.config, {
+          avoidFormulaId: body?.avoidFormulaId,
+        }),
         formulas: STRUCTURE_FORMULAS,
       });
     }

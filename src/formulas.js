@@ -140,9 +140,11 @@ export function getFormulasByLevel(level) {
   return STRUCTURE_FORMULAS.filter((formula) => formula.level === Number(level));
 }
 
-export function createTask(inputConfig = {}) {
+export function createTask(inputConfig = {}, options = {}) {
   const config = normalizeConfig(inputConfig);
-  const selectedFormula = getDefaultFormula(config.level);
+  const selectedFormula = selectFormula(config.level, options);
+  const levelFormulas = getFormulasByLevel(config.level);
+  const formulaIndex = levelFormulas.findIndex((formula) => formula.id === selectedFormula.id) + 1;
 
   return {
     id: `task-${Date.now()}`,
@@ -153,11 +155,30 @@ export function createTask(inputConfig = {}) {
     formula: selectedFormula.steps,
     formulaId: selectedFormula.id,
     formulaLabel: selectedFormula.label,
+    formulaMeta: {
+      level: selectedFormula.level,
+      formulaIndex,
+      formulaCount: levelFormulas.length,
+      relations: selectedFormula.steps.map((step) => step.relation),
+    },
     sourceIdea: selectedFormula.sourceIdea,
     evaluationGuidance: createEvaluationGuidance(selectedFormula),
     instruction: createInstruction(config, selectedFormula),
     scaffold: config.support === "easy" ? selectedFormula.easyScaffold : "",
   };
+}
+
+function selectFormula(level, options = {}) {
+  const formulas = getFormulasByLevel(level);
+  if (!formulas.length) return STRUCTURE_FORMULAS[0];
+
+  const avoidFormulaId = String(options.avoidFormulaId || "");
+  const pool = formulas.length > 1 && avoidFormulaId ? formulas.filter((formula) => formula.id !== avoidFormulaId) : formulas;
+  const candidates = pool.length ? pool : formulas;
+  const random = typeof options.random === "function" ? options.random : Math.random;
+  const index = Math.min(candidates.length - 1, Math.floor(random() * candidates.length));
+
+  return candidates[index] || candidates[0];
 }
 
 function createInstruction(config, formula) {

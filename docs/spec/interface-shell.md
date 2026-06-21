@@ -12,7 +12,7 @@ The lesson system is not a separate dashboard. It lives around the chat as drawe
 Top bar
   left: menu / pages
   center: empty in the mobile MVP unless a task state truly needs it
-  right: empty in the mobile MVP unless a real account or status action exists
+  right: hint and randomize pattern
 
 Main surface
   full-height AI chat
@@ -24,7 +24,6 @@ Main surface
 Bottom dock
   mode control
   input
-  hint control
   send action
 ```
 
@@ -47,7 +46,6 @@ The bottom dock contains:
 - Text input.
 - Send button.
 - Mode button for current lesson settings, shown as a gear icon.
-- Hint button beside the answer/send area.
 - Small active lesson readout when a lesson is running.
 
 The dock is the primary control origin. The old plus affordance is treated as a mode control, not a generic add button.
@@ -73,7 +71,7 @@ Mode Drawer rules:
 
 ## Hint Sheet
 
-The Hint button opens cohesive-device groups from the input dock.
+The Hint button opens cohesive-device groups from the top bar.
 
 Hint Sheet rules:
 
@@ -123,7 +121,14 @@ On mobile, this replaces the classic desktop result page.
 
 The top-left menu opens a course/pages drawer.
 
-In the mobile MVP, the visible top chrome should be minimal: a two-line menu affordance only. Do not show the app title, level readout, or API/model pill in the header unless they become actionable.
+In the mobile MVP, the visible top chrome should be minimal: a two-line menu affordance plus compact action icons. Do not show the app title, level readout, or API/model pill in the header unless they become actionable.
+
+The right side can hold compact action icons:
+
+- Hint opens the current formula devices and the general cohesion inventory.
+- Randomize pattern asks the backend for a different pattern in the selected level when available.
+
+If the learner has not typed or submitted anything, changing mode or randomizing should replace the current task card instead of stacking another task card.
 
 The drawer contains:
 

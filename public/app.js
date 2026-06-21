@@ -14,6 +14,7 @@ const elements = {
   form: document.querySelector("#inputForm"),
   composer: document.querySelector("#composer"),
   sendButton: document.querySelector("#sendButton"),
+  rerollButton: document.querySelector("#rerollTaskButton"),
   apiPill: document.querySelector("#apiPill"),
   subtitle: document.querySelector("#sessionSubtitle"),
   pageDrawer: document.querySelector("#pageDrawer"),
@@ -84,7 +85,8 @@ document.querySelector("#modeButton").addEventListener("click", () => openDrawer
 document.querySelector("#closeModeSheet").addEventListener("click", closeOverlays);
 document.querySelector("#hintButton").addEventListener("click", () => openDrawer(elements.hintSheet));
 document.querySelector("#closeHintSheet").addEventListener("click", closeOverlays);
-document.querySelector("#startTaskButton").addEventListener("click", startTask);
+document.querySelector("#rerollTaskButton").addEventListener("click", () => startTask({ avoidCurrent: true }));
+document.querySelector("#startTaskButton").addEventListener("click", () => startTask({ avoidCurrent: true }));
 elements.scrim.addEventListener("click", closeOverlays);
 elements.form.addEventListener("submit", submitAttempt);
 elements.composer.addEventListener("input", autoSizeComposer);
@@ -141,20 +143,38 @@ async function checkHealth() {
   }
 }
 
-async function startTask() {
+async function startTask(options = {}) {
+  if (state.isEvaluating) return;
+
+  const shouldReplace = shouldReplaceDraftTask();
+  const avoidFormulaId = options.avoidCurrent ? state.task?.formulaId : "";
   closeOverlays();
-  const data = await postJson("/api/task", { config: state.config });
+  const data = await postJson("/api/task", {
+    config: state.config,
+    avoidFormulaId,
+  });
   state.task = data.task;
   state.config = { ...state.task.config };
   syncControls();
   renderHints();
   updateSubtitle();
 
-  addMessage({
+  const taskMessage = {
     role: "assistant",
     kind: "task",
     task: state.task,
-  });
+  };
+
+  if (shouldReplace) {
+    replaceMessage(state.messages[state.messages.length - 1].id, taskMessage);
+  } else {
+    addMessage(taskMessage);
+  }
+}
+
+function shouldReplaceDraftTask() {
+  if (elements.composer.value.trim()) return false;
+  return state.messages[state.messages.length - 1]?.kind === "task";
 }
 
 async function submitAttempt(event) {
@@ -228,6 +248,7 @@ function submitOnEnter(event) {
 function setEvaluating(value) {
   state.isEvaluating = value;
   elements.sendButton.disabled = value;
+  if (elements.rerollButton) elements.rerollButton.disabled = value;
 }
 
 function addMessage(message) {
@@ -276,16 +297,22 @@ function renderMessage(message) {
 }
 
 function renderTaskMessage(task) {
+  const meta = task.formulaMeta || {};
+  const relations = Array.isArray(meta.relations) ? meta.relations.join(" -> ") : "";
   return `
     <article class="message assistant">
       <div class="message-head">
         <span class="chip primary">Structure</span>
-        <span class="chip">Level ${task.config.level}</span>
+        <span class="chip level-chip">Level ${task.config.level}</span>
+        ${meta.formulaCount ? `<span class="chip">Pattern ${escapeHtml(meta.formulaIndex)} / ${escapeHtml(meta.formulaCount)}</span>` : ""}
         <span class="chip">${capitalize(task.config.support)}</span>
       </div>
       <p>${escapeHtml(task.instruction)}</p>
       <div class="formula-box">
-        <strong>${escapeHtml(task.formulaLabel)}</strong>
+        <div class="formula-title">
+          <strong>${escapeHtml(task.formulaLabel)}</strong>
+          ${relations ? `<span>${escapeHtml(relations)}</span>` : ""}
+        </div>
         ${task.scaffold ? `<code>${escapeHtml(task.scaffold)}</code>` : ""}
         <p>${escapeHtml(task.sourceIdea)}</p>
       </div>

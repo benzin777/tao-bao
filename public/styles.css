@@ -73,6 +73,7 @@ button {
   z-index: 10;
   display: flex;
   align-items: center;
+  justify-content: space-between;
   min-height: 62px;
   padding: calc(10px + env(safe-area-inset-top, 0px)) 14px 8px;
   background: linear-gradient(180deg, rgba(250, 250, 253, 0.92), rgba(250, 250, 253, 0.72));
@@ -107,6 +108,7 @@ button {
 .icon-button:focus-visible,
 .mode-button:focus-visible,
 .hint-button:focus-visible,
+.top-action-button:focus-visible,
 .send-button:focus-visible,
 .start-button:focus-visible,
 .segmented button:focus-visible,
@@ -125,6 +127,40 @@ select:focus-visible {
   background: transparent;
   border-color: transparent;
   box-shadow: none;
+}
+
+.top-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.top-action-button {
+  display: inline-grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  border: 1px solid rgba(29, 29, 31, 0.08);
+  background: rgba(255, 255, 255, 0.74);
+  color: var(--ink);
+  cursor: pointer;
+  font-weight: 800;
+}
+
+.top-action-button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.top-actions .hint-button {
+  background: rgba(0, 167, 220, 0.1);
+  border-color: rgba(0, 167, 220, 0.18);
+  color: #075a78;
+}
+
+.reroll-button {
+  font-size: 18px;
 }
 
 .chat {
@@ -192,6 +228,11 @@ select:focus-visible {
   color: #075a78;
 }
 
+.chip.level-chip {
+  background: rgba(29, 29, 31, 0.08);
+  color: var(--ink);
+}
+
 .chip.success {
   background: rgba(19, 138, 82, 0.1);
   color: var(--success);
@@ -215,6 +256,17 @@ select:focus-visible {
   margin-top: 6px;
   color: var(--accent-strong);
   white-space: normal;
+}
+
+.formula-title {
+  display: grid;
+  gap: 4px;
+}
+
+.formula-title span {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.35;
 }
 
 .result-stack {
@@ -356,7 +408,7 @@ select:focus-visible {
   bottom: 0;
   z-index: 11;
   display: grid;
-  grid-template-columns: 44px minmax(0, 1fr) 40px 44px;
+  grid-template-columns: 44px minmax(0, 1fr) 44px;
   align-items: end;
   gap: 8px;
   padding: 10px 12px calc(10px + env(safe-area-inset-bottom, 0px));
@@ -365,7 +417,6 @@ select:focus-visible {
 }
 
 .mode-button,
-.hint-button,
 .send-button {
   display: inline-grid;
   place-items: center;
@@ -381,15 +432,6 @@ select:focus-visible {
   color: var(--ink);
   border: 1px solid rgba(29, 29, 31, 0.08);
   font-size: 19px;
-  letter-spacing: 0;
-}
-
-.hint-button {
-  width: 40px;
-  background: rgba(0, 167, 220, 0.1);
-  color: #075a78;
-  border: 1px solid rgba(0, 167, 220, 0.18);
-  font-size: 15px;
   letter-spacing: 0;
 }
 

@@ -15,6 +15,14 @@
             <span></span>
           </span>
         </button>
+        <div class="top-actions">
+          <button class="top-action-button hint-button" id="hintButton" type="button" aria-label="Open cohesive device hints">
+            <span aria-hidden="true">?</span>
+          </button>
+          <button class="top-action-button reroll-button" id="rerollTaskButton" type="button" aria-label="Randomize pattern">
+            <span aria-hidden="true">↻</span>
+          </button>
+        </div>
       </header>
 
       <main class="chat" id="chat" aria-live="polite"></main>
@@ -27,9 +35,6 @@
           <span class="sr-only">Write your sentence</span>
           <textarea id="composer" rows="1" placeholder="Write your sentence..."></textarea>
         </label>
-        <button class="hint-button" id="hintButton" type="button" aria-label="Open cohesive device hints">
-          <span aria-hidden="true">?</span>
-        </button>
         <button class="send-button" id="sendButton" type="submit" aria-label="Send sentence">
           <span aria-hidden="true">↑</span>
         </button>
