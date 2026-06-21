@@ -148,3 +148,17 @@ Movement:
 Decision:
 
 - Future chats should not reconstruct the project from scattered messages. They should start from the repo context.
+
+## 2026-06-21 - Canonical Remote Correction
+
+Commit: pending at the time this entry was written.
+
+Movement:
+
+- Corrected the local `origin` remote from `tao-bao` to `tao-dao`.
+- Updated README, AGENTS, and future-chat context so the canonical project path and remote are no longer stale.
+- Verified that GitHub currently returns `Repository not found` for the corrected `tao-dao` URL from this shell.
+
+Decision:
+
+- The project identity is `tao-dao`; `tao-bao` was a remote naming mistake and should not be carried forward. If GitHub access fails, fix repo creation or credentials instead of reverting the name.

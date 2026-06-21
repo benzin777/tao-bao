@@ -6,9 +6,10 @@ The product is not a generic grammar chatbot. It is a constrained writing workbe
 
 ## Current State
 
-- Local project path: `/Users/bzd/tao-dao`
+- Local project path: `/Users/dmitryb/Documents/Codex/tao-dao`
 - Local git repo: yes, branch `main`
-- GitHub remote: not configured yet
+- GitHub remote: `origin` -> `https://github.com/benzin777/tao-dao.git`
+- Remote reachability: GitHub currently returns `Repository not found` from this shell, so the repo may need to be created or credentials may need to be added.
 - Runtime: no-framework Node server plus static mobile UI
 - API provider: OpenAI Responses API through the local server
 - Default model: `gpt-5.5`
@@ -17,7 +18,7 @@ The product is not a generic grammar chatbot. It is a constrained writing workbe
 ## Quick Start
 
 ```bash
-cd /Users/bzd/tao-dao
+cd /Users/dmitryb/Documents/Codex/tao-dao
 cp .env.example .env
 # add OPENAI_API_KEY to .env
 npm start
@@ -195,21 +196,24 @@ Start here in future sessions:
 
 ## GitHub Status
 
-The project is committed locally but does not currently have a remote.
+The project is committed locally and the canonical remote is `tao-dao`.
 
 ```bash
 git remote -v
 ```
 
-If GitHub CLI is installed and authenticated later:
+Expected remote:
 
 ```bash
-gh repo create tao-dao --private --source=. --remote=origin --push
+origin  https://github.com/benzin777/tao-dao.git (fetch)
+origin  https://github.com/benzin777/tao-dao.git (push)
 ```
 
-Without `gh`, create a private empty repo named `tao-dao` on GitHub, then run:
+Current caveat: `git ls-remote --heads origin main` returns `Repository not found` from this machine. Treat the URL as the intended canonical target until GitHub access is available or the private repo exists.
+
+If the remote ever needs to be recreated:
 
 ```bash
-git remote add origin git@github.com:<owner>/tao-dao.git
+git remote set-url origin https://github.com/benzin777/tao-dao.git
 git push -u origin main
 ```

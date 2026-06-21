@@ -1,10 +1,10 @@
 # Future Chat Brief
 
-Last updated: 2026-06-20
+Last updated: 2026-06-21
 
 ## Project
 
-Tao Dao is a standalone English sentence-construction tutor at `/Users/bzd/tao-dao`.
+Tao Dao is a standalone English sentence-construction tutor at `/Users/dmitryb/Documents/Codex/tao-dao`.
 
 It began as an English learning concept for mastering selected failure modules, then became a local Node/static web app with a mobile-first AI chat shell.
 
@@ -12,8 +12,9 @@ It began as an English learning concept for mastering selected failure modules, 
 
 - Local git repo exists.
 - Branch: `main`.
-- Latest commit before this context pack: `17e2fd3 feat: add cohesive device hints`.
-- No GitHub remote is configured yet.
+- Latest committed context pack: `aaa3359 docs: add project context pack`.
+- Canonical GitHub remote: `origin` -> `https://github.com/benzin777/tao-dao.git`.
+- Remote reachability: `git ls-remote --heads origin main` currently returns `Repository not found`, so the private repo may need to be created or credentials may need to be added.
 - `npm test` passed after the latest app change.
 - Public preview previously used a Cloudflare quick tunnel pointing to `127.0.0.1:8789`, but tunnel URLs are temporary and should be re-verified before use.
 - OpenAI key is not configured on this machine unless the user adds `.env`.
@@ -138,20 +139,20 @@ Borrow from Webstar's discipline, not its product identity:
 
 ## GitHub / Repo State
 
-As of 2026-06-20:
+As of 2026-06-21:
 
-- `/Users/bzd/tao-dao` has local git history.
-- `git remote -v` is empty.
+- `/Users/dmitryb/Documents/Codex/tao-dao` has local git history on `main`.
+- `origin` is configured as `https://github.com/benzin777/tao-dao.git`.
+- GitHub returns `Repository not found` for that URL from this shell.
 - `gh` is not available.
 - No GitHub token is visible in env vars.
 - No SSH private key is visible under `~/.ssh`.
 
-If credentials become available, create a private GitHub repo named `tao-dao` and push `main`.
+If credentials become available, verify or create the private GitHub repo named `tao-dao` and push `main`.
 
 ## Important Next Moves
 
-1. Create GitHub remote/private repo.
-2. Configure `OPENAI_API_KEY` and test real evaluations.
-3. Observe real model output and tune the prompt/schema.
-4. Build richer Structure course pages.
-5. Add saved attempts and progression only after the first loop is stable.
+1. Configure `OPENAI_API_KEY` and test real evaluations.
+2. Observe real model output and tune the prompt/schema.
+3. Build richer Structure course pages.
+4. Add saved attempts and progression only after the first loop is stable.
