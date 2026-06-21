@@ -122,8 +122,10 @@ async function init() {
 async function checkHealth() {
   try {
     const health = await getJson("/api/health");
-    elements.apiPill.textContent = health.hasOpenAIKey ? health.model : "No key";
-    elements.apiPill.classList.toggle("missing", !health.hasOpenAIKey);
+    if (elements.apiPill) {
+      elements.apiPill.textContent = health.hasOpenAIKey ? health.model : "No key";
+      elements.apiPill.classList.toggle("missing", !health.hasOpenAIKey);
+    }
     if (!health.hasOpenAIKey) {
       addMessage({
         role: "system",
@@ -132,8 +134,10 @@ async function checkHealth() {
       });
     }
   } catch {
-    elements.apiPill.textContent = "Offline";
-    elements.apiPill.classList.add("missing");
+    if (elements.apiPill) {
+      elements.apiPill.textContent = "Offline";
+      elements.apiPill.classList.add("missing");
+    }
   }
 }
 
@@ -402,7 +406,9 @@ function updateModePreview() {
 }
 
 function updateSubtitle() {
-  elements.subtitle.textContent = `Structure · Level ${state.config.level} · ${capitalize(state.config.support)}`;
+  if (elements.subtitle) {
+    elements.subtitle.textContent = `Structure · Level ${state.config.level} · ${capitalize(state.config.support)}`;
+  }
 }
 
 function openDrawer(drawer) {

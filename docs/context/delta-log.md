@@ -181,3 +181,19 @@ Movement:
 Decision:
 
 - The MVP should feel like a live sentence-construction teacher before it grows analytics or progress pages. Loop counts and success pipeline belong later, after the sentence/correction/rewrite loop feels reliable.
+
+## 2026-06-21 - Minimal Mobile Chrome
+
+Commit: pending at the time this entry was written.
+
+Movement:
+
+- Removed the visible title, session subtitle, and model/API pill from the mobile top bar.
+- Reduced the page drawer affordance to a two-line menu icon.
+- Changed the Mode control to a gear icon.
+- Moved Hint beside the answer/send area in the bottom dock.
+- Removed hard header/dock divider lines in favor of softer translucent surfaces.
+
+Decision:
+
+- The practice sentence and answer dock should carry the interface. Header metadata is not actionable enough to deserve first-row visual weight in the mobile MVP.

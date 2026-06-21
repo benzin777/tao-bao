@@ -10,28 +10,26 @@
     <div class="app-shell">
       <header class="top-bar">
         <button class="icon-button" id="menuButton" type="button" aria-label="Open pages">
-          <span aria-hidden="true">☰</span>
+          <span class="menu-glyph" aria-hidden="true">
+            <span></span>
+            <span></span>
+          </span>
         </button>
-        <div class="session-title">
-          <strong>Tao Dao</strong>
-          <span id="sessionSubtitle">Structure · Level 1 · Easy</span>
-        </div>
-        <div class="api-pill" id="apiPill">API</div>
       </header>
 
       <main class="chat" id="chat" aria-live="polite"></main>
 
       <form class="input-dock" id="inputForm">
         <button class="mode-button" id="modeButton" type="button" aria-label="Open mode controls">
-          <span aria-hidden="true">Mode</span>
-        </button>
-        <button class="hint-button" id="hintButton" type="button" aria-label="Open cohesive device hints">
-          <span aria-hidden="true">Hint</span>
+          <span aria-hidden="true">⚙</span>
         </button>
         <label class="composer-shell">
           <span class="sr-only">Write your sentence</span>
           <textarea id="composer" rows="1" placeholder="Write your sentence..."></textarea>
         </label>
+        <button class="hint-button" id="hintButton" type="button" aria-label="Open cohesive device hints">
+          <span aria-hidden="true">?</span>
+        </button>
         <button class="send-button" id="sendButton" type="submit" aria-label="Send sentence">
           <span aria-hidden="true">↑</span>
         </button>

@@ -11,8 +11,8 @@ The lesson system is not a separate dashboard. It lives around the chat as drawe
 ```text
 Top bar
   left: menu / pages
-  center: current page or session title
-  right: session state / account later
+  center: empty in the mobile MVP unless a task state truly needs it
+  right: empty in the mobile MVP unless a real account or status action exists
 
 Main surface
   full-height AI chat
@@ -22,8 +22,9 @@ Main surface
   revision turns
 
 Bottom dock
-  input
   mode control
+  input
+  hint control
   send action
 ```
 
@@ -45,7 +46,8 @@ The bottom dock contains:
 
 - Text input.
 - Send button.
-- Mode button for current lesson settings.
+- Mode button for current lesson settings, shown as a gear icon.
+- Hint button beside the answer/send area.
 - Small active lesson readout when a lesson is running.
 
 The dock is the primary control origin. The old plus affordance is treated as a mode control, not a generic add button.
@@ -120,6 +122,8 @@ On mobile, this replaces the classic desktop result page.
 ## Top-Left Menu
 
 The top-left menu opens a course/pages drawer.
+
+In the mobile MVP, the visible top chrome should be minimal: a two-line menu affordance only. Do not show the app title, level readout, or API/model pill in the header unless they become actionable.
 
 The drawer contains:
 
