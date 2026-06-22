@@ -29,7 +29,12 @@ test("OpenAI request body keeps structured output and low verbosity", () => {
   const body = createEvaluationRequestBody({
     model: "gpt-5.5",
     reasoningEffort: "medium",
-    task: { formulaId: "test" },
+    task: {
+      formulaId: "test",
+      taskContext: {
+        fixedIdea: "Immediate correction after each attempt makes the next attempt more accurate.",
+      },
+    },
     attemptText: "Because I practice, I improve.",
   });
 
@@ -39,6 +44,7 @@ test("OpenAI request body keeps structured output and low verbosity", () => {
   assert.equal(body.text.format.type, "json_schema");
   assert.equal(body.text.format.strict, true);
   assert.match(body.input[1].content, /Because I practice, I improve/);
+  assert.match(body.input[1].content, /Immediate correction after each attempt/);
 });
 
 test("evaluateWithOpenAI uses background mode and polls until the result completes", async () => {

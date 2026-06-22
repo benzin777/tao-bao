@@ -87,11 +87,23 @@ Implemented:
 
 Structure tasks are selected randomly from the current level's formula pool. The top-bar reroll button asks the backend for a different pattern when the level has alternatives.
 
+Tasks also use a fixed-grid mixer. The formula is the structure skeleton; the mixer supplies a concrete learning-science context:
+
+- mechanism,
+- domain,
+- situation,
+- fixed idea,
+- audience,
+- communicative goal.
+
+The fixed idea must not drift. AI feedback may sound natural, but it should not reward a connector-correct sentence that changes the task idea.
+
 Task cards show backend metadata:
 
 - Level.
 - Pattern index, current-level count, and total Structure inventory count.
 - Relation stack.
+- Mechanism, situation, and fixed idea.
 
 When the learner has not typed or submitted an attempt, mode changes and rerolls replace the draft task card instead of duplicating it in the chat.
 

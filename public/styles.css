@@ -270,6 +270,31 @@ select:focus-visible {
   line-height: 1.35;
 }
 
+.task-grid {
+  display: grid;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.task-datum {
+  display: grid;
+  gap: 3px;
+}
+
+.task-datum span {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.task-datum p {
+  margin: 0;
+  color: var(--ink);
+  font-size: 13px;
+  line-height: 1.42;
+}
+
 .result-stack {
   display: grid;
   gap: 10px;

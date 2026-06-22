@@ -142,7 +142,7 @@ public/
 src/
   server.js        static server and JSON API routes
   config.js        .env loading and runtime config
-  formulas.js      lesson config, formula inventory, task creation
+  formulas.js      lesson config, formula inventory, fixed-grid task mixer, task creation
   openai.js        OpenAI Responses API call and evaluator prompt
   schema.js        strict structured-output schema
   evaluator.js     attempt normalization and evaluator repair layer

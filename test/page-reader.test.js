@@ -59,3 +59,12 @@ test("task card distinguishes level pool from total structure inventory", async 
   assert.match(app, /totalFormulaCount/);
   assert.match(app, /total/);
 });
+
+test("task and result copy avoid generic marked-part feedback", async () => {
+  const app = await readFile(new URL("../public/app.js", import.meta.url), "utf8");
+
+  assert.match(app, /Mechanism/);
+  assert.match(app, /Fixed idea/);
+  assert.match(app, /function issueStatusLine/);
+  assert.doesNotMatch(app, /Almost there\. Fix the marked part\./);
+});

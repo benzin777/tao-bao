@@ -134,6 +134,27 @@ Rules:
 - Task cards should expose backend metadata such as level, pattern position, total patterns in the level, and relation stack.
 - If no learner attempt exists yet, a new task replaces the previous draft task instead of adding a duplicate card.
 
+## Fixed-Grid Task Mixer
+
+Formula selection and task content are separate.
+
+```text
+formula = relation skeleton
+task mixer = concrete learning-science context
+```
+
+The mixer gives each task:
+
+- mechanism, such as feedback loop, retrieval practice, spaced review, deliberate practice, error log, transfer, friction control, or bottleneck removal;
+- situation;
+- fixed idea;
+- audience;
+- communicative goal.
+
+The fixed idea is part of the task contract. A learner should practice the selected structure while preserving that idea. If the connector is correct but the idea changes, the attempt still needs revision.
+
+This prevents the formula pool from becoming repetitive motivational filler while still keeping the learner controls simple.
+
 ## Feedback Behavior
 
 ### If Formula Fails

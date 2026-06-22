@@ -33,6 +33,81 @@ export const RELATION_GROUPS = [
   "temporal",
 ];
 
+export const TASK_MIXER_GRID = [
+  {
+    id: "feedback-loop",
+    mechanism: "Feedback loop",
+    domain: "English correction",
+    situation: "A learner repeats the same article mistake until feedback arrives before the next attempt.",
+    fixedIdea: "Immediate correction after each attempt makes the next attempt more accurate.",
+    audience: "a learner who thinks repetition alone is enough",
+    communicativeGoal: "show why feedback must come before the next repetition",
+  },
+  {
+    id: "retrieval-practice",
+    mechanism: "Retrieval practice",
+    domain: "sentence drills",
+    situation: "A learner wants to reread notes, but the useful work is recalling the connector from memory.",
+    fixedIdea: "Trying to recall a structure before checking notes makes the structure easier to use later.",
+    audience: "a learner who keeps rereading instead of testing memory",
+    communicativeGoal: "explain why recall beats passive review",
+  },
+  {
+    id: "spaced-review",
+    mechanism: "Spaced review",
+    domain: "practice schedule",
+    situation: "A learner studies a pattern once, then forgets it because the next review comes too late.",
+    fixedIdea: "Returning to the same structure after a delay keeps it available when pressure rises.",
+    audience: "a learner who wants to finish a pattern in one sitting",
+    communicativeGoal: "make delayed review feel necessary, not optional",
+  },
+  {
+    id: "deliberate-isolation",
+    mechanism: "Deliberate practice",
+    domain: "weak-point training",
+    situation: "A learner writes full essays but never isolates the one sentence move that keeps failing.",
+    fixedIdea: "Isolating one weak construction creates faster progress than practicing everything at once.",
+    audience: "a learner who wants broad practice without a target",
+    communicativeGoal: "defend narrow drills as the fastest route to control",
+  },
+  {
+    id: "error-log",
+    mechanism: "Error log",
+    domain: "mistake tracking",
+    situation: "A learner forgets which errors repeat, so each correction feels new instead of connected.",
+    fixedIdea: "Tracking repeated mistakes turns random corrections into a visible training plan.",
+    audience: "a learner who ignores repeated error patterns",
+    communicativeGoal: "show why the error log is not bureaucracy",
+  },
+  {
+    id: "transfer",
+    mechanism: "Transfer",
+    domain: "sales message",
+    situation: "A learner can do a structure in a drill but loses it when writing a persuasive message.",
+    fixedIdea: "A structure becomes useful only when the learner can transfer it into a real message.",
+    audience: "a learner who separates drills from practical communication",
+    communicativeGoal: "connect controlled practice to real persuasion",
+  },
+  {
+    id: "friction-control",
+    mechanism: "Friction control",
+    domain: "daily routine",
+    situation: "A learner skips practice because opening the exercise takes more energy than the drill itself.",
+    fixedIdea: "Reducing the friction before practice makes consistency more likely than motivation alone.",
+    audience: "a learner who waits for motivation",
+    communicativeGoal: "argue for designing the setup before relying on willpower",
+  },
+  {
+    id: "bottleneck",
+    mechanism: "Bottleneck removal",
+    domain: "speaking confidence",
+    situation: "A learner studies many topics, but one missing structure keeps blocking clear speech.",
+    fixedIdea: "Removing the main bottleneck improves the whole performance more than adding more material.",
+    audience: "a learner who keeps collecting new material",
+    communicativeGoal: "explain why one constraint can unlock a wider skill",
+  },
+];
+
 export const STRUCTURE_FORMULAS = [
   formula({
     id: "cause-result",
@@ -441,6 +516,7 @@ export function getFormulasByLevel(level) {
 export function createTask(inputConfig = {}, options = {}) {
   const config = normalizeConfig(inputConfig);
   const selectedFormula = selectFormula(config.level, options);
+  const taskContext = selectTaskContext(options);
   const levelFormulas = getFormulasByLevel(config.level);
   const formulaIndex = levelFormulas.findIndex((formula) => formula.id === selectedFormula.id) + 1;
 
@@ -462,10 +538,13 @@ export function createTask(inputConfig = {}, options = {}) {
       punctuationRule: selectedFormula.punctuationRule,
       sourceRefs: selectedFormula.sourceRefs,
       scenario: selectedFormula.scenario,
+      mechanism: taskContext.mechanism,
+      domain: taskContext.domain,
     },
-    sourceIdea: selectedFormula.sourceIdea,
-    evaluationGuidance: createEvaluationGuidance(selectedFormula),
-    instruction: createInstruction(config, selectedFormula),
+    taskContext,
+    sourceIdea: taskContext.fixedIdea,
+    evaluationGuidance: createEvaluationGuidance(selectedFormula, taskContext),
+    instruction: createInstruction(config, selectedFormula, taskContext),
     scaffold: config.support === "easy" ? selectedFormula.easyScaffold : "",
   };
 }
@@ -483,16 +562,22 @@ function selectFormula(level, options = {}) {
   return candidates[index] || candidates[0];
 }
 
-function createInstruction(config, formula) {
+function selectTaskContext(options = {}) {
+  const random = typeof options.random === "function" ? options.random : Math.random;
+  const index = Math.min(TASK_MIXER_GRID.length - 1, Math.floor(random() * TASK_MIXER_GRID.length));
+  return TASK_MIXER_GRID[index] || TASK_MIXER_GRID[0];
+}
+
+function createInstruction(config, formula, taskContext) {
   if (config.support === "easy") {
-    return "Write one sentence using the selected structure. Fill the frame without changing the logic.";
+    return "Use the frame to express the fixed idea. Keep the meaning stable; only add the selected structure.";
   }
 
   if (config.support === "normal") {
-    return `Write one sentence using the selected level ${config.level} structure. Keep the logic clear and connected.`;
+    return `Write one sentence for ${taskContext.audience}. Keep the fixed idea, and use the selected level ${config.level} structure.`;
   }
 
-  return `Make this idea sound intelligent and logically connected: "${formula.sourceIdea}" Use the selected level ${config.level} structure without being shown the frame.`;
+  return `Convince ${taskContext.audience}: ${taskContext.communicativeGoal}. Keep this fixed idea: "${taskContext.fixedIdea}" Use the selected level ${config.level} structure without being shown the frame.`;
 }
 
 function normalizeInteger(value, allowed, fallback) {
@@ -500,10 +585,11 @@ function normalizeInteger(value, allowed, fallback) {
   return allowed.includes(parsed) ? parsed : fallback;
 }
 
-function createEvaluationGuidance(formula) {
+function createEvaluationGuidance(formula, taskContext) {
   const base = formula.evaluationGuidance || "Check that every required relation appears in the intended order.";
+  const fixedIdeaRule = ` Keep the fixed idea stable: ${taskContext.fixedIdea}`;
 
-  if (formula.id !== "cause-result") return base;
+  if (formula.id !== "cause-result") return `${base}${fixedIdeaRule}`;
 
-  return `${base} Do not require both because and so in the same simple sentence.`;
+  return `${base} Do not require both because and so in the same simple sentence.${fixedIdeaRule}`;
 }

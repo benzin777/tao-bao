@@ -172,6 +172,15 @@ interface Task {
   formula: FormulaStep[];
   formulaId: string;
   formulaLabel: string;
+  taskContext: {
+    id: string;
+    mechanism: string;
+    domain: string;
+    situation: string;
+    fixedIdea: string;
+    audience: string;
+    communicativeGoal: string;
+  };
   formulaMeta: {
     level: StructureLevel;
     formulaIndex: number;
@@ -181,6 +190,8 @@ interface Task {
     punctuationRule: string;
     sourceRefs: string[];
     scenario: string;
+    mechanism: string;
+    domain: string;
   };
   instruction: string;
   scaffold?: string;

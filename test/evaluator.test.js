@@ -9,7 +9,7 @@ import {
   STRUCTURE_FORMULAS,
   validateAndRepairEvaluation,
 } from "../src/evaluator.js";
-import { CURRICULUM_SOURCES, RELATION_GROUPS } from "../src/formulas.js";
+import { CURRICULUM_SOURCES, RELATION_GROUPS, TASK_MIXER_GRID } from "../src/formulas.js";
 
 const REQUIRED_RELATIONS = [
   "addition",
@@ -199,6 +199,44 @@ test("createTask exposes curriculum metadata without changing learner controls",
   assert.ok(task.formulaMeta.totalFormulaCount >= 24);
   assert.ok(task.evaluationGuidance);
   assert.equal(task.scaffold, "");
+});
+
+test("createTask mixes fixed learning-science context into every task", () => {
+  const task = createTask(
+    {
+      lesson: "structure",
+      level: 1,
+      support: "easy",
+    },
+    {
+      random: () => 0,
+    },
+  );
+
+  assert.deepEqual(task.taskContext, TASK_MIXER_GRID[0]);
+  assert.equal(task.sourceIdea, TASK_MIXER_GRID[0].fixedIdea);
+  assert.equal(task.formulaMeta.mechanism, TASK_MIXER_GRID[0].mechanism);
+  assert.equal(task.formulaMeta.domain, TASK_MIXER_GRID[0].domain);
+  assert.match(task.instruction, /fixed idea/i);
+  assert.match(task.evaluationGuidance, new RegExp(TASK_MIXER_GRID[0].fixedIdea.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
+});
+
+test("task mixer can pair the same formula grid with a concrete purpose task", () => {
+  const task = createTask(
+    {
+      lesson: "structure",
+      level: 1,
+      support: "hard",
+    },
+    {
+      random: () => 0.7,
+    },
+  );
+
+  assert.equal(task.formulaLabel, "Purpose");
+  assert.equal(task.taskContext.mechanism, TASK_MIXER_GRID[5].mechanism);
+  assert.match(task.instruction, /Keep this fixed idea/);
+  assert.match(task.instruction, new RegExp(task.taskContext.fixedIdea.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
 });
 
 test("normalizeAttempt trims and collapses whitespace", () => {

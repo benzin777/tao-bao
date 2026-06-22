@@ -135,8 +135,6 @@ Decision:
 
 ## 2026-06-20 - Context Pack
 
-Commit: pending at the time this entry was written.
-
 Movement:
 
 - Expanded README into a proper project entrypoint.
@@ -324,3 +322,19 @@ Decision:
 
 - Medium reasoning is the default tutor loop. High reasoning is a calibration or hard-case lever, not the everyday setting.
 - The current curriculum has 24 formula shapes, not 9. The next scale problem is scenario/seed variety inside formulas, not merely adding unbacked formula labels.
+
+## 2026-06-22 - Fixed-Grid Task Mixer
+
+Commit: pending at the time this entry was written.
+
+Movement:
+
+- Added a fixed task mixer grid with learning-science mechanisms such as feedback loop, retrieval practice, spaced review, deliberate practice, error log, transfer, friction control, and bottleneck removal.
+- Changed tasks so `sourceIdea` comes from the mixer `fixedIdea`, not vague formula filler.
+- Rendered mechanism, situation, and fixed idea inside the task card.
+- Replaced the generic result line `Almost there. Fix the marked part.` with formula/issue-specific status copy.
+- Tightened the evaluator prompt so a connector-correct sentence still needs revision if it changes the fixed idea.
+
+Decision:
+
+- Formula count is not the main source of depth. The formula is the skeleton; the fixed-grid mixer supplies concrete practice content. AI feedback can be natural, but task meaning must stay stable.

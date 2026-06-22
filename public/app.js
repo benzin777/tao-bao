@@ -360,6 +360,7 @@ function renderMessage(message) {
 
 function renderTaskMessage(task) {
   const meta = task.formulaMeta || {};
+  const context = task.taskContext || {};
   const relations = Array.isArray(meta.relations) ? meta.relations.join(" -> ") : "";
   return `
     <article class="message assistant">
@@ -377,9 +378,22 @@ function renderTaskMessage(task) {
           ${relations ? `<span>${escapeHtml(relations)}</span>` : ""}
         </div>
         ${task.scaffold ? `<code>${escapeHtml(task.scaffold)}</code>` : ""}
-        <p>${escapeHtml(task.sourceIdea)}</p>
+        <div class="task-grid">
+          ${context.mechanism ? renderTaskDatum("Mechanism", context.mechanism) : ""}
+          ${context.situation ? renderTaskDatum("Situation", context.situation) : ""}
+          ${renderTaskDatum("Fixed idea", task.sourceIdea)}
+        </div>
       </div>
     </article>
+  `;
+}
+
+function renderTaskDatum(label, value) {
+  return `
+    <div class="task-datum">
+      <span>${escapeHtml(label)}</span>
+      <p>${escapeHtml(value)}</p>
+    </div>
   `;
 }
 
@@ -742,10 +756,33 @@ async function parseJsonResponse(response) {
 }
 
 function resultStatusLine(result, issues) {
-  if (result.status === "passed" && issues.length) return "Structure passed. Fix the English.";
+  const firstRequiredIssue = issues.find((issue) => issue.severity !== "suggestion" && issue.category !== "enrichment");
+  if (result.status === "passed" && firstRequiredIssue) return issueStatusLine(firstRequiredIssue, "Structure passed.");
   if (result.status === "passed") return "Structure passed.";
-  if (result.formula?.fit === "failed") return "Build the structure first.";
-  return "Almost there. Fix the marked part.";
+  if (result.formula?.fit === "failed") return formulaStatusLine(result);
+  if (firstRequiredIssue) return issueStatusLine(firstRequiredIssue, "Needs revision.");
+  return result.summary || "Needs one specific rewrite.";
+}
+
+function formulaStatusLine(result) {
+  const missing = Array.isArray(result.formula?.missing) ? result.formula.missing : [];
+  if (missing.length) {
+    return `Missing ${labelRelation(missing[0].relation)} relation. Build the structure first.`;
+  }
+  return "Wrong structure. Build the selected relation pattern first.";
+}
+
+function issueStatusLine(issue, prefix) {
+  const category = labelCategory(issue.category);
+  if (issue.replacement) {
+    const original = issue.original ? `"${issue.original}"` : "the marked part";
+    return `${prefix} ${category}: ${original} -> "${issue.replacement}".`;
+  }
+  return `${prefix} ${category}: ${issue.explanation}`;
+}
+
+function labelRelation(relation) {
+  return String(relation || "required").replace(/-/g, " ");
 }
 
 function labelCategory(category) {
