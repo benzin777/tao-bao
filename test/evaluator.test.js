@@ -6,8 +6,25 @@ import {
   getFormulasByLevel,
   normalizeAttempt,
   normalizeConfig,
+  STRUCTURE_FORMULAS,
   validateAndRepairEvaluation,
 } from "../src/evaluator.js";
+import { CURRICULUM_SOURCES, RELATION_GROUPS } from "../src/formulas.js";
+
+const REQUIRED_RELATIONS = [
+  "addition",
+  "contrast",
+  "cause",
+  "result",
+  "condition",
+  "concession",
+  "purpose",
+  "exemplification",
+  "sequence",
+  "comparison",
+  "clarification",
+  "conclusion",
+];
 
 test("createTask keeps level and support separate", () => {
   const task = createTask(
@@ -59,9 +76,9 @@ test("createTask can select a non-default formula from the selected level", () =
   );
 
   assert.equal(task.config.level, 2);
-  assert.equal(task.formulaLabel, "Contrast -> clarification");
-  assert.equal(task.formulaMeta.formulaIndex, 3);
-  assert.equal(task.formulaMeta.formulaCount, 3);
+  assert.notEqual(task.formulaId, getFormulasByLevel(2)[0].id);
+  assert.equal(task.formulaMeta.formulaIndex, getFormulasByLevel(2).length);
+  assert.equal(task.formulaMeta.formulaCount, getFormulasByLevel(2).length);
 });
 
 test("createTask reroll avoids the previous formula when alternatives exist", () => {
@@ -102,8 +119,84 @@ test("normalizeConfig removes removed user-facing controls", () => {
 test("formulas can be selected by level", () => {
   const formulas = getFormulasByLevel(2);
 
-  assert.equal(formulas.length, 3);
+  assert.ok(formulas.length >= 6);
+  assert.ok(formulas.length <= 8);
   assert.ok(formulas.every((formula) => formula.level === 2));
+});
+
+test("structure curriculum has source-backed depth at every level", () => {
+  for (const level of [1, 2, 3]) {
+    const formulas = getFormulasByLevel(level);
+
+    assert.ok(formulas.length >= 6, `Level ${level} should have at least 6 formulas`);
+    assert.ok(formulas.length <= 8, `Level ${level} should stay focused at 8 formulas or fewer`);
+  }
+
+  assert.ok(STRUCTURE_FORMULAS.length >= 18);
+  assert.ok(STRUCTURE_FORMULAS.length <= 24);
+});
+
+test("structure curriculum covers the required relation groups", () => {
+  const covered = new Set(STRUCTURE_FORMULAS.flatMap((formula) => formula.steps.map((step) => step.relation)));
+
+  for (const relation of REQUIRED_RELATIONS) {
+    assert.ok(covered.has(relation), `Missing relation group: ${relation}`);
+  }
+});
+
+test("structure formulas carry curriculum metadata for the task and evaluator", () => {
+  for (const formula of STRUCTURE_FORMULAS) {
+    assert.equal(formula.lesson, "structure");
+    assert.deepEqual(
+      formula.relationStack,
+      formula.steps.map((step) => step.relation),
+    );
+    assert.ok(formula.scenario, `${formula.id} needs a scenario`);
+    assert.ok(formula.punctuationRule, `${formula.id} needs punctuation guidance`);
+    assert.ok(formula.evaluationGuidance, `${formula.id} needs evaluator guidance`);
+    assert.ok(Array.isArray(formula.sourceRefs), `${formula.id} needs source refs`);
+    assert.ok(formula.sourceRefs.length > 0, `${formula.id} needs at least one source ref`);
+  }
+});
+
+test("structure formula metadata references known curriculum sources and relations", () => {
+  const sourceIds = new Set(Object.keys(CURRICULUM_SOURCES));
+  const relationIds = new Set(RELATION_GROUPS);
+
+  for (const formula of STRUCTURE_FORMULAS) {
+    for (const sourceRef of formula.sourceRefs) {
+      assert.ok(sourceIds.has(sourceRef), `${formula.id} references unknown source ${sourceRef}`);
+    }
+
+    for (const step of formula.steps) {
+      assert.ok(relationIds.has(step.relation), `${formula.id} uses unknown relation ${step.relation}`);
+    }
+  }
+});
+
+test("createTask exposes curriculum metadata without changing learner controls", () => {
+  const task = createTask(
+    {
+      lesson: "structure",
+      level: 3,
+      support: "normal",
+      formulaId: "ignored-user-control",
+      quantity: 10,
+      tone: "academic",
+    },
+    {
+      random: () => 0.2,
+    },
+  );
+
+  assert.deepEqual(Object.keys(task.config).sort(), ["formulaId", "lesson", "level", "support"]);
+  assert.equal(task.formulaMeta.level, 3);
+  assert.ok(Array.isArray(task.formulaMeta.relations));
+  assert.ok(task.formulaMeta.relations.length >= 3);
+  assert.ok(task.formulaMeta.punctuationRule);
+  assert.ok(task.formulaMeta.sourceRefs.length > 0);
+  assert.ok(task.evaluationGuidance);
+  assert.equal(task.scaffold, "");
 });
 
 test("normalizeAttempt trims and collapses whitespace", () => {

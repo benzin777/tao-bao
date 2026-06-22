@@ -28,6 +28,9 @@ Examples:
 - contrast
 - addition
 - condition -> result
+- purpose
+- exemplification
+- comparison
 
 Target sentence:
 
@@ -45,6 +48,8 @@ Examples:
 - cause -> result -> contrast
 - contrast -> clarification
 - purpose -> result
+- sequence -> cause -> result
+- temporal -> condition -> result
 
 Target sentence:
 
@@ -61,6 +66,8 @@ Examples:
 - concession -> cause -> result -> conclusion
 - condition -> contrast -> clarification -> result
 - cause -> contrast -> result -> alternative
+- reference -> clarification -> contrast -> result
+- exemplification -> emphasis -> result -> conclusion
 
 Target sentence:
 
@@ -161,19 +168,36 @@ Example:
 Your structure works. The upgraded version makes the cause more specific and the conclusion more precise.
 ```
 
-## First Formula Inventory
+## Source-Backed Formula Inventory
+
+The active inventory has 24 Structure formulas: 8 per level. The learner still does not choose the exact formula.
 
 | Level | Formula | Easy Scaffold |
 | --- | --- | --- |
 | 1 | cause -> result | Because ___, ___. |
 | 1 | contrast | ___, but ___. |
 | 1 | condition -> result | If ___, ___. |
+| 1 | addition | ___, and ___. |
+| 1 | sequence | First, ___; then, ___. |
+| 1 | purpose | To ___, ___. |
+| 1 | exemplification | ___; for example, ___. |
+| 1 | comparison | ___, like ___. |
 | 2 | condition -> result -> addition | If ___, ___, and ___. |
 | 2 | cause -> result -> contrast | Because ___, ___; however, ___. |
 | 2 | contrast -> clarification | ___, but ___; in other words, ___. |
+| 2 | purpose -> result | To ___, ___; as a result, ___. |
+| 2 | sequence -> cause -> result | First, ___; then, because ___, ___. |
+| 2 | comparison -> contrast -> clarification | Like ___, ___; however, ___; in other words, ___. |
+| 2 | exemplification -> result | ___; for example, ___, so ___. |
+| 2 | temporal -> condition -> result | When ___, if ___, ___. |
 | 3 | concession -> cause -> result -> conclusion | Although ___, because ___, ___; therefore, ___. |
 | 3 | condition -> contrast -> clarification -> result | If ___, ___ yet ___; in other words, ___, so ___. |
 | 3 | cause -> contrast -> result -> alternative | Since ___ whereas ___, ___; consequently, ___ rather than ___. |
+| 3 | temporal -> cause -> result -> conclusion | Once ___, because ___, ___; ultimately, ___. |
+| 3 | comparison -> concession -> result -> conclusion | Like ___, ___; although ___, ___; in short, ___. |
+| 3 | purpose -> sequence -> result -> conclusion | To ___, first ___, then ___; therefore, ___. |
+| 3 | reference -> clarification -> contrast -> result | This ___; in other words, ___; however, ___, so ___. |
+| 3 | exemplification -> emphasis -> result -> conclusion | ___; for example, ___; in fact, ___; therefore, ___. |
 
 ## Pass Criteria
 

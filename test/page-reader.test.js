@@ -20,3 +20,24 @@ test("page data is initialized before the app renders the default reader page", 
 
   assert.ok(app.indexOf("const COURSE_PAGES") < app.indexOf("init();"));
 });
+
+test("hint and page material include the expanded structure relation groups", async () => {
+  const app = await readFile(new URL("../public/app.js", import.meta.url), "utf8");
+  const requiredTerms = [
+    "Purpose",
+    "Exemplification",
+    "Sequence",
+    "Comparison",
+    "Emphasis",
+    "Reference",
+    "Temporal",
+  ];
+
+  for (const term of requiredTerms) {
+    assert.match(app, new RegExp(term), `Missing relation material for ${term}`);
+  }
+
+  assert.match(app, /CEFR/);
+  assert.match(app, /Cambridge/);
+  assert.match(app, /Purdue/);
+});

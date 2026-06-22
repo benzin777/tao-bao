@@ -14,6 +14,7 @@ The product is not a generic grammar chatbot. It is a constrained writing workbe
 - API provider: OpenAI Responses API through the local server
 - Default model: `gpt-5.5`
 - OpenAI key status on this machine: not configured unless `.env` contains `OPENAI_API_KEY`
+- Structure inventory: 24 source-backed formulas, 8 per level.
 
 ## Quick Start
 
@@ -101,6 +102,8 @@ Examples:
 | 1 | `cause -> result` | `Because ___, ___.` |
 | 2 | `condition -> result -> addition` | `If ___, ___, and ___.` |
 | 3 | `concession -> cause -> result -> conclusion` | `Although ___, because ___, ___; therefore, ___.` |
+
+The active Structure inventory also covers purpose, exemplification, sequence, comparison, emphasis, reference, and temporal relations. The learner still selects only level and support; Tao Dao selects the exact pattern internally.
 
 Support modes:
 

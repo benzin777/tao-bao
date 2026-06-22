@@ -152,8 +152,16 @@ interface FormulaStep {
     | "result"
     | "condition"
     | "concession"
+    | "purpose"
+    | "exemplification"
+    | "sequence"
+    | "comparison"
     | "clarification"
-    | "conclusion";
+    | "conclusion"
+    | "alternative"
+    | "emphasis"
+    | "reference"
+    | "temporal";
   expectedMarkers: string[];
   required: boolean;
 }
@@ -162,9 +170,21 @@ interface Task {
   id: string;
   config: SessionConfig;
   formula: FormulaStep[];
+  formulaId: string;
+  formulaLabel: string;
+  formulaMeta: {
+    level: StructureLevel;
+    formulaIndex: number;
+    formulaCount: number;
+    relations: FormulaStep["relation"][];
+    punctuationRule: string;
+    sourceRefs: string[];
+    scenario: string;
+  };
   instruction: string;
   scaffold?: string;
   sourceIdea?: string;
+  evaluationGuidance?: string;
 }
 
 interface FeedbackIssue {

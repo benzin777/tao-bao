@@ -5,9 +5,16 @@ const relationEnum = [
   "result",
   "condition",
   "concession",
+  "purpose",
+  "exemplification",
+  "sequence",
+  "comparison",
   "clarification",
   "conclusion",
   "alternative",
+  "emphasis",
+  "reference",
+  "temporal",
 ];
 
 const formulaStepSchema = {

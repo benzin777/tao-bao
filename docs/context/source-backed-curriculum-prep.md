@@ -2,24 +2,33 @@
 
 Date: 2026-06-22
 
+Status: implemented on 2026-06-22. Structure Mode now has 24 formulas, 8 per level, with expanded relation coverage and tests.
+
 ## Current Verified Runtime
 
 - Local app is running at `http://127.0.0.1:8789`.
 - `/api/health` returns `ok: true`, model `gpt-5.5`, and `hasOpenAIKey: true`.
 - `npm test` passes with 14 tests.
-- Git branch is `main`, ahead of `origin/main` locally. The exact count can change until GitHub access is fixed.
+- Git branch is `main`; GitHub push now works through `https://github.com/benzin777/tao-bao.git`.
 
 ## Problem To Solve Next
 
 The product philosophy is bigger than the active curriculum.
 
-The live app now has a wiki-style page reader and a working Structure Mode loop, but the backend formula pool is still shallow:
+The live app originally had a wiki-style page reader and a working Structure Mode loop, but the backend formula pool was shallow:
 
-- Level 1 has 3 patterns.
-- Level 2 has 3 patterns.
-- Level 3 has 3 patterns.
+- Level 1 had 3 patterns.
+- Level 2 had 3 patterns.
+- Level 3 had 3 patterns.
 
-This makes the random pattern control feel real technically, but limited pedagogically.
+This made the random pattern control feel real technically, but limited pedagogically.
+
+Implemented result:
+
+- Level 1 has 8 patterns.
+- Level 2 has 8 patterns.
+- Level 3 has 8 patterns.
+- Required relation groups are covered by tests.
 
 ## Source Anchors
 
@@ -81,7 +90,7 @@ Do not activate prepositions/articles/time as separate modes in this slice. They
 
 ## First Expansion Target
 
-Move from 9 formulas to 18-24 formulas.
+Move from 9 formulas to 18-24 formulas. Implemented as 24.
 
 Suggested distribution:
 
@@ -93,13 +102,13 @@ The learner should still see only the selected task and helpful hints. The backe
 
 ## Implementation Checklist
 
-1. Add a curriculum module or expand `src/formulas.js` without changing public controls.
-2. Extend the relation enum in `src/schema.js` before formulas use new relation names.
-3. Add tests that assert formula counts by level and relation coverage.
-4. Update hint groups so new relation groups have device examples.
-5. Update the page reader content to reflect the expanded Structure curriculum.
+1. Add a curriculum module or expand `src/formulas.js` without changing public controls. Done.
+2. Extend the relation enum in `src/schema.js` before formulas use new relation names. Done.
+3. Add tests that assert formula counts by level and relation coverage. Done.
+4. Update hint groups so new relation groups have device examples. Done.
+5. Update the page reader content to reflect the expanded Structure curriculum. Done.
 6. Keep `/api/task` and `/api/formulas` contracts compatible unless there is a deliberate contract update.
-7. Run real `/api/evaluate` checks only after formula data and schema validation pass locally.
+7. Run real `/api/evaluate` checks only after formula data and schema validation pass locally. Next.
 
 Note: a 2026-06-22 live calibration attempt against `/api/evaluate` timed out with 504 under the current `gpt-5.5` high-reasoning settings. Keep the quality model as the target, but add a measured calibration harness before treating evaluator behavior as proven.
 

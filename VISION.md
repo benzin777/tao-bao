@@ -84,6 +84,11 @@ Structure Mode trains logical relations between clauses:
 - Resultative
 - Conditional
 - Temporal/sequential
+- Purpose
+- Exemplification
+- Comparison
+- Emphasis
+- Reference
 - Clarifying
 - Concessive
 - Concluding

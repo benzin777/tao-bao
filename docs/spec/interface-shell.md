@@ -76,7 +76,7 @@ The Hint button opens cohesive-device groups from the top bar.
 Hint Sheet rules:
 
 - Show the current task's required relation groups first.
-- Then show general groups such as cause, result, contrast, concession, condition, addition, sequence, clarification, example, and conclusion.
+- Then show general groups such as cause, result, contrast, concession, condition, addition, sequence, purpose, temporal, comparison, clarification, exemplification, emphasis, reference, and conclusion.
 - Let the learner tap a device to place it into the composer.
 - Do not turn hints into a second settings system.
 

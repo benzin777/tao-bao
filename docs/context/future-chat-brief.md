@@ -16,6 +16,7 @@ It began as an English learning concept for mastering selected failure modules, 
 - GitHub remote: `origin` -> `https://github.com/benzin777/tao-bao.git`.
 - Remote reachability: push to GitHub succeeded on 2026-06-22. The local product folder remains `tao-dao`; the GitHub repository is named `tao-bao`.
 - `npm test` passed after the latest app change.
+- Structure Mode now has 24 source-backed formulas: 8 per level.
 - Public preview previously used a Cloudflare quick tunnel pointing to `127.0.0.1:8789`, but tunnel URLs are temporary and should be re-verified before use.
 - OpenAI key is configured only when `.env` contains `OPENAI_API_KEY`.
 - The quality default is `gpt-5.5` with high reasoning and `OPENAI_TIMEOUT_MS=90000`; lower these deliberately only when optimizing latency.
@@ -79,7 +80,7 @@ Implemented:
 
 - Top-bar `Hint` button.
 - Hint sheet with current task relation groups.
-- General device groups: cause, result, contrast, concession, condition, addition, sequence, clarification, example, conclusion.
+- General device groups: cause, result, contrast, concession, condition, addition, sequence, purpose, temporal, comparison, clarification, exemplification, emphasis, reference, conclusion.
 - Tapping a device inserts it into the composer.
 
 ### Random Pattern
@@ -114,6 +115,12 @@ Examples:
 - Level 1: `cause -> result`
 - Level 2: `condition -> result -> addition`
 - Level 3: `concession -> cause -> result -> conclusion`
+
+Current inventory:
+
+- Level 1: 8 single-relation/simple-dependency patterns.
+- Level 2: 8 chained-relation patterns.
+- Level 3: 8 layered-argument patterns.
 
 Support:
 
@@ -151,7 +158,7 @@ Structure Mode is based on:
 - Conjunctive adverbials.
 - Relational prepositions later.
 - Discourse competence.
-- Conjunctive cohesion categories: additive, adversative, causal, conditional, temporal/sequential, clarification, concession, conclusion.
+- Conjunctive cohesion categories: additive, adversative, causal, conditional, temporal/sequential, purpose, exemplification, comparison, emphasis, reference, clarification, concession, conclusion.
 
 ## Future Lesson Families
 
@@ -187,9 +194,9 @@ Do not point `origin` back to `tao-dao` unless the GitHub repository is delibera
 
 ## Important Next Moves
 
-1. Use `docs/context/investigation-2026-06-22.md` and `docs/context/source-backed-curriculum-prep.md` to expand the Structure curriculum/data model before more UI polish.
-2. Expand the formula pool from 9 patterns to a source-backed 18-24 patterns with relation coverage tests.
-3. Build a live evaluator calibration harness before prompt tuning; include passing, formula-fail, and grammar-blocker examples across Level 1/2/3.
-4. Upgrade the annotated result surface after the curriculum layer is stable.
+1. Build a live evaluator calibration harness before prompt tuning; include passing, formula-fail, and grammar-blocker examples across Level 1/2/3.
+2. Run measured `/api/evaluate` checks against the expanded 24-pattern curriculum.
+3. Tune prompt/schema only from observed failures, especially timeout behavior under `gpt-5.5` high reasoning.
+4. Upgrade the annotated result surface after calibration data exists.
 5. Add task-scoped attempt/revision state before saved attempts or analytics.
 6. Keep GitHub pushed before deploy work; remote access is currently unblocked through `benzin777/tao-bao`.

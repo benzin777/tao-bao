@@ -67,8 +67,23 @@ const DEVICE_GROUPS = [
   },
   {
     name: "Sequence",
-    job: "orders the thought in time",
+    job: "orders steps in the thought",
     devices: ["first", "then", "meanwhile", "finally"],
+  },
+  {
+    name: "Purpose",
+    job: "shows the goal of an action",
+    devices: ["to", "in order to", "so that", "for"],
+  },
+  {
+    name: "Temporal",
+    job: "connects action to time",
+    devices: ["when", "after", "before", "once"],
+  },
+  {
+    name: "Comparison",
+    job: "makes one idea clearer through another",
+    devices: ["like", "similar to", "compared with", "as"],
   },
   {
     name: "Clarification",
@@ -76,9 +91,19 @@ const DEVICE_GROUPS = [
     devices: ["in other words", "that is", "to put it simply"],
   },
   {
-    name: "Example",
+    name: "Exemplification",
     job: "introduces a concrete instance",
     devices: ["for example", "for instance", "such as", "namely"],
+  },
+  {
+    name: "Emphasis",
+    job: "marks the most important point",
+    devices: ["especially", "in fact", "above all", "most importantly"],
+  },
+  {
+    name: "Reference",
+    job: "points back to a known idea",
+    devices: ["this", "that", "these", "those"],
   },
   {
     name: "Conclusion",
@@ -743,6 +768,12 @@ const COURSE_PAGES = {
           "Formula fit comes before grammar, fluency, and enrichment. The app should teach construction, not only correct output.",
       },
       {
+        type: "callout",
+        label: "Source frame",
+        body:
+          "CEFR gives the ladder from basic connectors to controlled use of organisational patterns and cohesive devices. Cambridge gives the relation-marker grammar. Purdue OWL grounds punctuation as part of sentence structure.",
+      },
+      {
         type: "list",
         heading: "Relation jobs",
         items: [
@@ -766,6 +797,22 @@ const COURSE_PAGES = {
             title: "Clarification",
             text: "Restates a thought more precisely. Common markers: in other words, that is, to put it simply.",
           },
+          {
+            title: "Purpose",
+            text: "Names the goal of an action. Common markers: to, in order to, so that.",
+          },
+          {
+            title: "Exemplification",
+            text: "Uses a concrete case to support a general idea. Common markers: for example, for instance, such as.",
+          },
+          {
+            title: "Sequence and temporal",
+            text: "Sequence orders steps; Temporal connects actions to time. Common markers: first, then, when, after, once.",
+          },
+          {
+            title: "Comparison, emphasis, reference",
+            text: "Comparison clarifies through similarity; Emphasis marks importance; Reference points back to a known idea with this, that, these, or those.",
+          },
         ],
       },
       {
@@ -774,13 +821,13 @@ const COURSE_PAGES = {
         examples: [
           {
             label: "Level 1",
-            sentence: "Because I practice daily, I improve.",
-            note: "One cause-result relation.",
+            sentence: "To improve my English, I practice one structure every day.",
+            note: "One simple dependency: purpose -> action.",
           },
           {
             label: "Level 2",
-            sentence: "If I practice daily, I improve faster, and I feel more confident.",
-            note: "Condition, result, and addition.",
+            sentence: "First I notice the weak pattern; then, because I repeat it, the mistake becomes easier to control.",
+            note: "Sequence, cause, and result.",
           },
           {
             label: "Level 3",
@@ -805,9 +852,19 @@ const COURSE_PAGES = {
         heading: "Level meaning",
         columns: ["Level", "Target", "Example shape"],
         rows: [
-          ["1", "One relation", "Because ___, ___."],
-          ["2", "Two relation moves", "If ___, ___, and ___."],
-          ["3", "Layered argument", "Although ___, because ___, ___; therefore, ___."],
+          ["1", "One relation or simple dependency", "Because ___, ___. / To ___, ___."],
+          ["2", "Two or three relation moves", "First ___; then, because ___, ___."],
+          ["3", "Layered argument with three or more moves", "Although ___, because ___, ___; therefore, ___."],
+        ],
+      },
+      {
+        type: "table",
+        heading: "Current Structure inventory",
+        columns: ["Level", "Pattern count", "Training target"],
+        rows: [
+          ["1", "8 patterns", "Single relation jobs and simple dependencies."],
+          ["2", "8 patterns", "Chained relations with punctuation pressure."],
+          ["3", "8 patterns", "Layered argument with qualification and resolution."],
         ],
       },
       {
@@ -858,7 +915,34 @@ const COURSE_PAGES = {
           ["Cause", "You give the reason.", "because, since, as, due to"],
           ["Result", "You show the consequence.", "so, therefore, thus, consequently"],
           ["Condition", "One idea depends on another.", "if, unless, provided that, as long as"],
+          ["Concession", "You admit one point before turning.", "although, even though, while"],
+          ["Purpose", "You name the goal.", "to, in order to, so that"],
+          ["Sequence", "You order steps.", "first, then, next, finally"],
+          ["Temporal", "You connect action to time.", "when, after, before, once"],
+          ["Comparison", "You explain through similarity.", "like, similar to, compared with"],
           ["Clarification", "You restate more precisely.", "in other words, that is, to put it simply"],
+          ["Exemplification", "You give a concrete instance.", "for example, for instance, such as"],
+          ["Emphasis", "You mark the important part.", "especially, in fact, above all"],
+          ["Reference", "You point back to a known idea.", "this, that, these, those"],
+          ["Conclusion", "You close the logic.", "ultimately, in short, overall"],
+        ],
+      },
+      {
+        type: "list",
+        heading: "Source anchors",
+        items: [
+          {
+            title: "CEFR",
+            text: "Use the level ladder: basic connector control first, then wider organisational patterns and cohesive devices.",
+          },
+          {
+            title: "Cambridge Grammar",
+            text: "Use discourse markers and linking words as functional groups: connect, organise, manage, clarify, contrast, and sequence.",
+          },
+          {
+            title: "Purdue OWL",
+            text: "Treat punctuation as structural evidence, especially after introductory clauses and around conjunctive adverbs.",
+          },
         ],
       },
       {

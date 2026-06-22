@@ -275,3 +275,19 @@ Movement:
 Decision:
 
 - Keep the local project and product named Tao Dao / `tao-dao`. Use `benzin777/tao-bao` as the GitHub remote until the repository is deliberately renamed.
+
+## 2026-06-22 - Source-Backed Curriculum Expansion
+
+Commit: pending at the time this entry was written.
+
+Movement:
+
+- Expanded Structure Mode from 9 formulas to 24 formulas: 8 per level.
+- Added curriculum metadata to formulas: lesson, relation stack, scenario, punctuation rule, evaluator guidance, device groups, and source refs.
+- Extended the structured-output relation enum for purpose, exemplification, sequence, comparison, emphasis, reference, and temporal relations.
+- Expanded hint and wiki page material so the learner-facing reference layer matches the backend curriculum.
+- Added tests for level counts, relation coverage, curriculum metadata, task metadata, and page/hint material.
+
+Decision:
+
+- Curriculum depth is no longer the immediate bottleneck. The next bottleneck is measured evaluator calibration across the expanded formula pool, especially timeout and prompt/schema behavior under `gpt-5.5` high reasoning.

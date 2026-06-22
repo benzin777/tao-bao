@@ -18,7 +18,7 @@ This investigation covers the six open product lanes before implementation:
 - `npm test` passes with 14 tests.
 - Git branch is `main`.
 - Remote was later corrected to `https://github.com/benzin777/tao-bao.git` and pushed successfully on 2026-06-22.
-- Structure Mode has 9 live formulas: 3 per level.
+- Structure Mode originally had 9 live formulas: 3 per level. It was later expanded to 24 formulas: 8 per level.
 - A live `/api/evaluate` calibration attempt timed out at the app's server timeout boundary.
 
 ## 1. Curriculum Depth
@@ -48,7 +48,7 @@ The current formula model is too flat:
 
 ### Recommendation
 
-Build a source-backed curriculum layer before adding more patterns.
+Build a source-backed curriculum layer before adding more patterns. This was implemented as a 24-pattern Structure inventory.
 
 Target first expansion:
 
@@ -294,28 +294,28 @@ Do not treat the Mac as production just because localhost works.
 
 ## Recommended Implementation Order
 
-1. Curriculum data model and relation enum expansion.
-2. Expanded Structure formula pool with tests.
-3. Source-backed Structure page updates.
-4. Calibration harness and measured evaluator runs.
-5. Result surface upgrade.
-6. Task-scoped progress loop.
-7. Deploy planning.
+1. Calibration harness and measured evaluator runs.
+2. Prompt/schema tuning from measured failures.
+3. Result surface upgrade.
+4. Task-scoped progress loop.
+5. Deploy planning.
 
 ## Immediate Next Slice
 
-Implement only this:
+Implemented:
 
 **Source-backed Structure curriculum expansion**
 
 Acceptance:
 
 - relation enum supports required groups
-- formula pool expands from 9 to 18-24
+- formula pool expanded from 9 to 24
 - tests assert level counts and relation coverage
 - hint groups align with curriculum
 - page reader explains the expanded groups
 - no new user-facing formula/tone/quantity controls
+
+Next slice: evaluator calibration harness across the expanded curriculum.
 
 ## Sources
 

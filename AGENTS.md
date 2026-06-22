@@ -90,6 +90,6 @@ Do not run production builds unless a future build system exists and the user ex
 
 ## Near-Term Priorities
 
-1. Add a real OpenAI key locally and test live evaluation.
-2. Improve result visualization after real model responses are observed.
-3. Add course pages for Structure Mode before expanding to prepositions/articles/tenses.
+1. Build the evaluator calibration harness for the expanded 24-pattern Structure curriculum.
+2. Run real `/api/evaluate` examples across Level 1/2/3 and tune prompt/schema from measured model output.
+3. Improve result visualization after real model responses are observed.
