@@ -213,3 +213,18 @@ Movement:
 Decision:
 
 - The learner still chooses only level/support, but the exact formula should vary. The pattern pool belongs in backend metadata; the UI should show enough of it to prove the task is not a hard-coded default.
+
+## 2026-06-21 - Wiki-Style Page Reader
+
+Commit: pending at the time this entry was written.
+
+Movement:
+
+- Changed side-menu course material from chat-injected blurbs into a dedicated full-height page reader.
+- Added structured pages for Structure course, Level map, Connector sheet, and Future lessons.
+- Added static coverage so the drawer keeps a reader surface and does not regress to course messages in the chat thread.
+- Corrected stale interface docs around Hint and the page drawer.
+
+Decision:
+
+- Course pages are reference objects around the chat, not assistant turns. The chat remains the practice surface; the reader holds Notion/wiki-like lesson material.

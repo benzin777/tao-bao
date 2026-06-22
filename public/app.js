@@ -7,6 +7,7 @@ const state = {
   task: null,
   messages: [],
   isEvaluating: false,
+  activePageId: "structure-course",
 };
 
 const elements = {
@@ -18,6 +19,13 @@ const elements = {
   apiPill: document.querySelector("#apiPill"),
   subtitle: document.querySelector("#sessionSubtitle"),
   pageDrawer: document.querySelector("#pageDrawer"),
+  pageReader: document.querySelector("#pageReader"),
+  readerBackButton: document.querySelector("#readerBackButton"),
+  readerTitle: document.querySelector("#readerTitle"),
+  readerEyebrow: document.querySelector("#readerEyebrow"),
+  readerSummary: document.querySelector("#readerSummary"),
+  readerMeta: document.querySelector("#readerMeta"),
+  readerBody: document.querySelector("#readerBody"),
   modeSheet: document.querySelector("#modeSheet"),
   hintSheet: document.querySelector("#hintSheet"),
   scrim: document.querySelector("#scrim"),
@@ -81,6 +89,11 @@ const DEVICE_GROUPS = [
 
 document.querySelector("#menuButton").addEventListener("click", () => openDrawer(elements.pageDrawer));
 document.querySelector("#closePageDrawer").addEventListener("click", closeOverlays);
+document.querySelector("#closeReaderButton").addEventListener("click", closeReaderPage);
+elements.readerBackButton.addEventListener("click", () => {
+  closeReaderPage();
+  openDrawer(elements.pageDrawer);
+});
 document.querySelector("#modeButton").addEventListener("click", () => openDrawer(elements.modeSheet));
 document.querySelector("#closeModeSheet").addEventListener("click", closeOverlays);
 document.querySelector("#hintButton").addEventListener("click", () => openDrawer(elements.hintSheet));
@@ -96,8 +109,15 @@ elements.deviceGroups.addEventListener("click", (event) => {
   if (!button) return;
   insertDevice(button.dataset.device);
 });
-document.querySelectorAll("[data-material]").forEach((button) => {
-  button.addEventListener("click", () => openMaterial(button.dataset.material));
+document.querySelectorAll("[data-page]").forEach((button) => {
+  button.addEventListener("click", () => openReaderPage(button.dataset.page));
+});
+
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") {
+    if (elements.pageReader.classList.contains("open")) closeReaderPage();
+    else closeOverlays();
+  }
 });
 
 document.querySelectorAll(".segmented").forEach((group) => {
@@ -112,9 +132,8 @@ document.querySelectorAll(".segmented").forEach((group) => {
   });
 });
 
-init();
-
 async function init() {
+  renderReaderPage(state.activePageId);
   renderHints();
   await checkHealth();
   syncControls();
@@ -289,7 +308,6 @@ function renderMessages() {
 function renderMessage(message) {
   if (message.kind === "task") return renderTaskMessage(message.task);
   if (message.kind === "result") return renderResultMessage(message.attemptText, message.result);
-  if (message.kind === "material") return renderMaterialMessage(message);
   if (message.kind === "error") return `<article class="message assistant"><p>${escapeHtml(message.content)}</p></article>`;
   if (message.kind === "loading") return `<article class="message assistant loading"><p>${escapeHtml(message.content)}</p></article>`;
   if (message.role === "user") return `<article class="message user"><p>${escapeHtml(message.content)}</p></article>`;
@@ -315,20 +333,6 @@ function renderTaskMessage(task) {
         </div>
         ${task.scaffold ? `<code>${escapeHtml(task.scaffold)}</code>` : ""}
         <p>${escapeHtml(task.sourceIdea)}</p>
-      </div>
-    </article>
-  `;
-}
-
-function renderMaterialMessage(message) {
-  return `
-    <article class="message assistant">
-      <div class="message-head">
-        <span class="chip primary">Course</span>
-      </div>
-      <div class="formula-box">
-        <strong>${escapeHtml(message.title)}</strong>
-        <p>${escapeHtml(message.content)}</p>
       </div>
     </article>
   `;
@@ -453,15 +457,125 @@ function closeOverlays() {
   elements.scrim.hidden = true;
 }
 
-function openMaterial(material) {
+function openReaderPage(pageId) {
   closeOverlays();
-  const content = COURSE_MATERIALS[material] || COURSE_MATERIALS["structure-course"];
-  addMessage({
-    role: "assistant",
-    kind: "material",
-    title: content.title,
-    content: content.body,
+  renderReaderPage(pageId);
+  elements.pageReader.classList.add("open");
+  elements.pageReader.removeAttribute("inert");
+  elements.pageReader.setAttribute("aria-hidden", "false");
+  elements.readerBackButton.focus();
+}
+
+function closeReaderPage() {
+  elements.pageReader.classList.remove("open");
+  elements.pageReader.setAttribute("aria-hidden", "true");
+  elements.pageReader.setAttribute("inert", "");
+}
+
+function renderReaderPage(pageId) {
+  const page = COURSE_PAGES[pageId] || COURSE_PAGES["structure-course"];
+  state.activePageId = page.id;
+  elements.readerTitle.textContent = page.title;
+  elements.readerEyebrow.textContent = page.eyebrow;
+  elements.readerSummary.textContent = page.summary;
+  elements.readerMeta.innerHTML = renderReaderMeta(page);
+  elements.readerBody.innerHTML = page.sections.map(renderReaderSection).join("");
+  document.querySelectorAll("[data-page]").forEach((button) => {
+    button.classList.toggle("active", button.dataset.page === page.id);
   });
+}
+
+function renderReaderMeta(page) {
+  return page.meta.map((item) => `<span>${escapeHtml(item)}</span>`).join("");
+}
+
+function renderReaderSection(section) {
+  if (section.type === "callout") return renderCalloutSection(section);
+  if (section.type === "list") return renderListSection(section);
+  if (section.type === "table") return renderTableSection(section);
+  if (section.type === "examples") return renderExamplesSection(section);
+  return renderTextSection(section);
+}
+
+function renderTextSection(section) {
+  return `
+    <section class="wiki-section">
+      <h2>${escapeHtml(section.heading)}</h2>
+      ${section.body.map((paragraph) => `<p>${escapeHtml(paragraph)}</p>`).join("")}
+    </section>
+  `;
+}
+
+function renderCalloutSection(section) {
+  return `
+    <section class="wiki-callout">
+      <strong>${escapeHtml(section.label)}</strong>
+      <p>${escapeHtml(section.body)}</p>
+    </section>
+  `;
+}
+
+function renderListSection(section) {
+  return `
+    <section class="wiki-section">
+      <h2>${escapeHtml(section.heading)}</h2>
+      <div class="wiki-list">
+        ${section.items
+          .map(
+            (item) => `
+              <div class="wiki-list-item">
+                <strong>${escapeHtml(item.title)}</strong>
+                <p>${escapeHtml(item.text)}</p>
+              </div>
+            `,
+          )
+          .join("")}
+      </div>
+    </section>
+  `;
+}
+
+function renderTableSection(section) {
+  return `
+    <section class="wiki-section">
+      <h2>${escapeHtml(section.heading)}</h2>
+      <div class="wiki-table" role="table" aria-label="${escapeHtml(section.heading)}">
+        <div class="wiki-table-row head" role="row">
+          ${section.columns.map((column) => `<strong role="columnheader">${escapeHtml(column)}</strong>`).join("")}
+        </div>
+        ${section.rows
+          .map(
+            (row) => `
+              <div class="wiki-table-row" role="row">
+                ${row.map((cell) => `<span role="cell">${escapeHtml(cell)}</span>`).join("")}
+              </div>
+            `,
+          )
+          .join("")}
+      </div>
+    </section>
+  `;
+}
+
+function renderExamplesSection(section) {
+  return `
+    <section class="wiki-section">
+      <h2>${escapeHtml(section.heading)}</h2>
+      <div class="example-stack">
+        ${section.examples
+          .map(
+            (example) => `
+              <figure class="wiki-example">
+                <figcaption>${escapeHtml(example.label)}</figcaption>
+                <code>${escapeHtml(example.sentence)}</code>
+                <p>${escapeHtml(example.note)}</p>
+              </figure>
+            `,
+          )
+          .join("")}
+      </div>
+    </section>
+  `;
 }
 
 function autoSizeComposer() {
@@ -605,24 +719,233 @@ function labelCategory(category) {
   );
 }
 
-const COURSE_MATERIALS = {
+const COURSE_PAGES = {
   "structure-course": {
+    id: "structure-course",
+    eyebrow: "Structure Mode",
     title: "Structure course",
-    body: "Structure Mode trains relation stacking. Level 1 makes one logical move. Level 2 combines two moves. Level 3 builds a layered argument that sets up, qualifies, and resolves an idea.",
+    summary:
+      "Structure Mode trains the learner to build one sentence by controlling logical relations between ideas.",
+    meta: ["Active lesson", "Cohesive devices", "Formula-first feedback"],
+    sections: [
+      {
+        type: "text",
+        heading: "Core idea",
+        body: [
+          "The sentence is not judged only by grammar. It is judged by whether it performs the requested logical job.",
+          "A clean sentence can still fail Tao Dao if the target relation is missing. A rough sentence can be useful if the required structure is visible and teachable.",
+        ],
+      },
+      {
+        type: "callout",
+        label: "Product rule",
+        body:
+          "Formula fit comes before grammar, fluency, and enrichment. The app should teach construction, not only correct output.",
+      },
+      {
+        type: "list",
+        heading: "Relation jobs",
+        items: [
+          {
+            title: "Cause",
+            text: "Explains why the main idea happens. Common markers: because, since, as.",
+          },
+          {
+            title: "Result",
+            text: "Shows what follows from a cause. Common markers: so, therefore, consequently.",
+          },
+          {
+            title: "Contrast",
+            text: "Places two ideas against each other. Common markers: but, however, whereas.",
+          },
+          {
+            title: "Concession",
+            text: "Admits one point before moving to the stronger point. Common markers: although, even though, despite.",
+          },
+          {
+            title: "Clarification",
+            text: "Restates a thought more precisely. Common markers: in other words, that is, to put it simply.",
+          },
+        ],
+      },
+      {
+        type: "examples",
+        heading: "How a sentence grows",
+        examples: [
+          {
+            label: "Level 1",
+            sentence: "Because I practice daily, I improve.",
+            note: "One cause-result relation.",
+          },
+          {
+            label: "Level 2",
+            sentence: "If I practice daily, I improve faster, and I feel more confident.",
+            note: "Condition, result, and addition.",
+          },
+          {
+            label: "Level 3",
+            sentence:
+              "Although progress feels slow, because daily practice compounds, the result becomes visible; therefore, consistency matters more than intensity.",
+            note: "Concession, cause, result, and conclusion.",
+          },
+        ],
+      },
+    ],
   },
   "level-map": {
+    id: "level-map",
+    eyebrow: "Structure ladder",
     title: "Level map",
-    body: "Level 1 is one relation: because -> result. Level 2 is a chain: if -> result -> addition. Level 3 is an argument: although -> because -> therefore.",
+    summary:
+      "Level is structure complexity. Support is how much help the learner sees. They must stay separate.",
+    meta: ["Level 1 to 3", "Support independent", "Task difficulty"],
+    sections: [
+      {
+        type: "table",
+        heading: "Level meaning",
+        columns: ["Level", "Target", "Example shape"],
+        rows: [
+          ["1", "One relation", "Because ___, ___."],
+          ["2", "Two relation moves", "If ___, ___, and ___."],
+          ["3", "Layered argument", "Although ___, because ___, ___; therefore, ___."],
+        ],
+      },
+      {
+        type: "table",
+        heading: "Support meaning",
+        columns: ["Support", "What the learner sees", "Why it exists"],
+        rows: [
+          ["Easy", "Formula and scaffold", "Train the shape without memory pressure."],
+          ["Normal", "Formula name only", "Recall the structure without a full frame."],
+          ["Hard", "Communicative goal only", "Build the structure from intent."],
+        ],
+      },
+      {
+        type: "list",
+        heading: "Pass checks",
+        items: [
+          {
+            title: "Every required relation appears",
+            text: "If the task asks for concession -> cause -> result, all three jobs must be visible.",
+          },
+          {
+            title: "Markers match their job",
+            text: "Because cannot do the job of contrast; however cannot glue a cause clause.",
+          },
+          {
+            title: "The sentence stays coherent",
+            text: "The parts must support one meaning, not simply contain connector words.",
+          },
+        ],
+      },
+    ],
   },
   connectors: {
+    id: "connectors",
+    eyebrow: "Reference sheet",
     title: "Connector sheet",
-    body: "Cohesive devices work by job. Cause explains why. Result shows consequence. Contrast turns against an idea. Concession admits a point before countering. Clarification restates the thought.",
+    summary:
+      "Connectors are not decorative words. Each one performs a job and creates a punctuation obligation.",
+    meta: ["Writing aid", "Punctuation rules", "Device groups"],
+    sections: [
+      {
+        type: "table",
+        heading: "Core groups",
+        columns: ["Job", "Use when", "Devices"],
+        rows: [
+          ["Addition", "You add or reinforce a point.", "and, also, moreover, furthermore"],
+          ["Contrast", "Two ideas push against each other.", "but, however, yet, whereas"],
+          ["Cause", "You give the reason.", "because, since, as, due to"],
+          ["Result", "You show the consequence.", "so, therefore, thus, consequently"],
+          ["Condition", "One idea depends on another.", "if, unless, provided that, as long as"],
+          ["Clarification", "You restate more precisely.", "in other words, that is, to put it simply"],
+        ],
+      },
+      {
+        type: "list",
+        heading: "Punctuation memory",
+        items: [
+          {
+            title: "Because, although, if",
+            text: "These introduce dependent clauses. When they start the sentence, the first clause usually needs a comma before the main clause.",
+          },
+          {
+            title: "However, therefore, consequently",
+            text: "These often connect independent sentences. Use a period or semicolon before them, not a simple comma splice.",
+          },
+          {
+            title: "But, and, so",
+            text: "These can connect two independent clauses with a comma before the connector.",
+          },
+        ],
+      },
+      {
+        type: "examples",
+        heading: "Connector placement",
+        examples: [
+          {
+            label: "Cause first",
+            sentence: "Because the method is simple, people can repeat it.",
+            note: "The cause clause opens the sentence and takes a comma.",
+          },
+          {
+            label: "Conjunctive adverb",
+            sentence: "The method is simple; therefore, people can repeat it.",
+            note: "Therefore links two independent ideas with a semicolon or new sentence.",
+          },
+        ],
+      },
+    ],
   },
   "future-lessons": {
+    id: "future-lessons",
+    eyebrow: "Roadmap",
     title: "Future lessons",
-    body: "Next lesson families will be prepositions/articles and tenses. They should use the same chat shell, but each needs its own academic knowledge base and correction contract.",
+    summary:
+      "Future lesson families belong in the same chat shell, but they should not become active modes before Structure Mode is reliable.",
+    meta: ["Not active yet", "Reference only", "Same evaluator discipline"],
+    sections: [
+      {
+        type: "text",
+        heading: "Why they wait",
+        body: [
+          "Articles, prepositions, and tense are real failure modules, but adding them as active modes too early would dilute the first proof.",
+          "For now, they can appear as correction categories when they block a Structure attempt. Later, each needs its own lesson page, task generator, and evaluator rules.",
+        ],
+      },
+      {
+        type: "list",
+        heading: "Planned families",
+        items: [
+          {
+            title: "Articles and determiners",
+            text: "Train the question before each noun: general, new, known, owned, counted, or pointed to.",
+          },
+          {
+            title: "Prepositions",
+            text: "Train relation habits for place, time, movement, abstract pairing, and fixed academic patterns.",
+          },
+          {
+            title: "Time, tense, aspect",
+            text: "Train finished vs connected to now, whole vs in progress, real vs distant, and present perfect as the bridge problem.",
+          },
+          {
+            title: "Punctuation",
+            text: "Train punctuation as a structural signal, especially around clauses and conjunctive adverbs.",
+          },
+        ],
+      },
+      {
+        type: "callout",
+        label: "Activation rule",
+        body:
+          "A future page can be educational before it becomes a practice mode. The mode becomes active only when its task generator and evaluator contract exist.",
+      },
+    ],
   },
 };
+
+init();
 
 function capitalize(value) {
   const text = String(value || "");

@@ -115,12 +115,13 @@ Support modes:
 The app is an AI mobile chat shell.
 
 ```text
-Top-left menu -> course pages / lessons
+Top-left menu -> wiki-style course pages / lessons
 Main display  -> chat
 Top bar       -> pages, Hint, randomize pattern
 Bottom dock   -> Mode, input, send
 Mode sheet    -> lesson, level, support
 Hint sheet    -> current formula devices plus general device groups
+Page reader   -> Structure notes, level map, connector sheet, future lesson notes
 Result        -> structured assistant message inside chat
 ```
 

@@ -153,6 +153,8 @@ Use cases:
 
 Pages are separate from live lesson attempts. A lesson attempt is a structured event; a page is an educational/course object first.
 
+In the current mobile shell, selecting a page opens a full-height reader surface over the chat instead of adding a course message to the chat thread. The reader can feel like a small internal wiki: title, summary, metadata, sections, reference tables, and examples. It must not become the lesson engine or replace the chat as the first screen.
+
 ## Desktop Adaptation
 
 Desktop can reveal more at once:

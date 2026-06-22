@@ -50,24 +50,45 @@
         <button class="icon-button subtle" id="closePageDrawer" type="button" aria-label="Close pages">×</button>
       </div>
       <nav class="page-list">
-        <button class="page-row active" type="button" data-material="structure-course">
+        <button class="page-row active" type="button" data-page="structure-course">
           <strong>Structure course</strong>
           <span>How relation stacks work</span>
         </button>
-        <button class="page-row" type="button" data-material="level-map">
+        <button class="page-row" type="button" data-page="level-map">
           <strong>Level map</strong>
           <span>Level 1, 2, and 3</span>
         </button>
-        <button class="page-row" type="button" data-material="connectors">
+        <button class="page-row" type="button" data-page="connectors">
           <strong>Connector sheet</strong>
           <span>Cause, result, contrast</span>
         </button>
-        <button class="page-row" type="button" data-material="future-lessons">
+        <button class="page-row" type="button" data-page="future-lessons">
           <strong>Future lessons</strong>
           <span>Prepositions and tenses later</span>
         </button>
       </nav>
     </aside>
+
+    <section class="page-reader" id="pageReader" aria-hidden="true" aria-labelledby="readerTitle" inert>
+      <header class="reader-topbar">
+        <button class="icon-button subtle" id="readerBackButton" type="button" aria-label="Back to pages">
+          <span class="menu-glyph" aria-hidden="true">
+            <span></span>
+            <span></span>
+          </span>
+        </button>
+        <div>
+          <span id="readerEyebrow">Course page</span>
+          <h1 id="readerTitle">Structure course</h1>
+        </div>
+        <button class="icon-button subtle" id="closeReaderButton" type="button" aria-label="Close page">×</button>
+      </header>
+      <article class="reader-scroll">
+        <p class="reader-summary" id="readerSummary"></p>
+        <div class="reader-meta" id="readerMeta"></div>
+        <div class="reader-body" id="readerBody"></div>
+      </article>
+    </section>
 
     <section class="mode-sheet" id="modeSheet" aria-hidden="true">
       <div class="sheet-handle"></div>

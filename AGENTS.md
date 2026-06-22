@@ -58,7 +58,8 @@ Do not run production builds unless a future build system exists and the user ex
 ## UI Rules
 
 - Mobile chat is the primary surface.
-- Bottom dock contains Mode, Hint, composer, and send.
+- Top bar contains Pages, Hint, and randomize pattern.
+- Bottom dock contains Mode, composer, and send.
 - Mode sheet controls only lesson/level/support.
 - Hint sheet shows current task devices and general cohesive-device groups.
 - Page drawer stores educational material and future lesson pages.

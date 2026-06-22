@@ -92,6 +92,17 @@ Task cards show backend metadata:
 
 When the learner has not typed or submitted an attempt, mode changes and rerolls replace the draft task card instead of duplicating it in the chat.
 
+### Course Pages
+
+The side menu opens wiki-style course pages in a dedicated reader surface, not as chat messages. Current pages:
+
+- Structure course.
+- Level map.
+- Connector sheet.
+- Future lessons.
+
+Pages are reference/course objects around the chat. They should not become the active practice loop or a dashboard.
+
 ### Structure Mode
 
 Structure Mode trains cohesive devices and relation stacking.
@@ -178,6 +189,6 @@ If credentials become available, verify or create the private GitHub repo named 
 
 1. Configure `OPENAI_API_KEY` and test real evaluations.
 2. Observe real model output and tune the prompt/schema.
-3. Build richer Structure course pages.
+3. Expand the page reader with a source-backed Structure curriculum.
 4. Add saved attempts and progression only after the first loop is stable.
 5. Later, add loop/progress surfaces showing attempts per task and success pipeline; do not build this before the core tutor turn is stable.
