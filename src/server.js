@@ -15,6 +15,7 @@ const server = http.createServer(async (request, response) => {
       return sendJson(response, 200, {
         ok: true,
         model: runtime.openaiModel,
+        reasoningEffort: runtime.reasoningEffort,
         hasOpenAIKey: Boolean(runtime.openaiApiKey),
         openaiTimeoutMs: runtime.openaiTimeoutMs,
         openaiBackgroundMode: runtime.openaiBackgroundMode,

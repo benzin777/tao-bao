@@ -79,6 +79,7 @@ test("createTask can select a non-default formula from the selected level", () =
   assert.notEqual(task.formulaId, getFormulasByLevel(2)[0].id);
   assert.equal(task.formulaMeta.formulaIndex, getFormulasByLevel(2).length);
   assert.equal(task.formulaMeta.formulaCount, getFormulasByLevel(2).length);
+  assert.equal(task.formulaMeta.totalFormulaCount, STRUCTURE_FORMULAS.length);
 });
 
 test("createTask reroll avoids the previous formula when alternatives exist", () => {
@@ -195,6 +196,7 @@ test("createTask exposes curriculum metadata without changing learner controls",
   assert.ok(task.formulaMeta.relations.length >= 3);
   assert.ok(task.formulaMeta.punctuationRule);
   assert.ok(task.formulaMeta.sourceRefs.length > 0);
+  assert.ok(task.formulaMeta.totalFormulaCount >= 24);
   assert.ok(task.evaluationGuidance);
   assert.equal(task.scaffold, "");
 });

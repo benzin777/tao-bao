@@ -19,7 +19,7 @@ It began as an English learning concept for mastering selected failure modules, 
 - Structure Mode now has 24 source-backed formulas: 8 per level.
 - Public preview previously used a Cloudflare quick tunnel pointing to `127.0.0.1:8789`, but tunnel URLs are temporary and should be re-verified before use.
 - OpenAI key is configured only when `.env` contains `OPENAI_API_KEY`.
-- The quality default is `gpt-5.5` with high reasoning, `OPENAI_TIMEOUT_MS=300000`, and `OPENAI_BACKGROUND_MODE=true`; lower reasoning deliberately only when optimizing latency or running diagnostics.
+- The quality default is `gpt-5.5` with medium reasoning, `OPENAI_TIMEOUT_MS=300000`, and `OPENAI_BACKGROUND_MODE=true`; use high reasoning deliberately only when calibration proves the extra latency is worth it.
 - The 2026-06-22 investigation found that a real `/api/evaluate` calibration attempt timed out with 504 under the current quality settings. Do not judge evaluator quality from shell health alone.
 - Next-work research is captured in `docs/context/investigation-2026-06-22.md`; it covers curriculum depth, result surface, live calibration, lesson pages, progress loop, and GitHub/deploy.
 
@@ -90,7 +90,7 @@ Structure tasks are selected randomly from the current level's formula pool. The
 Task cards show backend metadata:
 
 - Level.
-- Pattern index and total patterns in the current level.
+- Pattern index, current-level count, and total Structure inventory count.
 - Relation stack.
 
 When the learner has not typed or submitted an attempt, mode changes and rerolls replace the draft task card instead of duplicating it in the chat.
@@ -196,7 +196,7 @@ Do not point `origin` back to `tao-dao` unless the GitHub repository is delibera
 
 1. Build a live evaluator calibration harness before prompt tuning; include passing, formula-fail, and grammar-blocker examples across Level 1/2/3.
 2. Run measured `/api/evaluate` checks against the expanded 24-pattern curriculum.
-3. Tune prompt/schema only from observed failures, especially timeout behavior under `gpt-5.5` high reasoning.
+3. Tune prompt/schema only from observed failures, especially timeout behavior under `gpt-5.5` medium reasoning and background mode.
 4. Upgrade the annotated result surface after calibration data exists.
 5. Add task-scoped attempt/revision state before saved attempts or analytics.
 6. Keep GitHub pushed before deploy work; remote access is currently unblocked through `benzin777/tao-bao`.

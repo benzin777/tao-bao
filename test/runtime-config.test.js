@@ -1,10 +1,21 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import {
+  DEFAULT_OPENAI_REASONING_EFFORT,
   DEFAULT_OPENAI_TIMEOUT_MS,
   normalizeOpenAIBackgroundMode,
+  normalizeOpenAIReasoningEffort,
   normalizeOpenAITimeoutMs,
 } from "../src/config.js";
+
+test("OpenAI reasoning effort defaults to medium for the general tutor loop", () => {
+  assert.equal(DEFAULT_OPENAI_REASONING_EFFORT, "medium");
+  assert.equal(normalizeOpenAIReasoningEffort(undefined), "medium");
+  assert.equal(normalizeOpenAIReasoningEffort(""), "medium");
+  assert.equal(normalizeOpenAIReasoningEffort("unknown"), "medium");
+  assert.equal(normalizeOpenAIReasoningEffort("HIGH"), "high");
+  assert.equal(normalizeOpenAIReasoningEffort("low"), "low");
+});
 
 test("OpenAI evaluator timeout defaults to the quality-safe 300 second window", () => {
   assert.equal(DEFAULT_OPENAI_TIMEOUT_MS, 300000);

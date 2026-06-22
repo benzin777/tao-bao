@@ -6,6 +6,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 export const ROOT_DIR = path.resolve(__dirname, "..");
 export const PUBLIC_DIR = path.join(ROOT_DIR, "public");
 export const DEFAULT_OPENAI_TIMEOUT_MS = 300000;
+export const DEFAULT_OPENAI_REASONING_EFFORT = "medium";
 
 export function loadDotEnv(filePath = path.join(ROOT_DIR, ".env")) {
   if (!fs.existsSync(filePath)) return;
@@ -35,10 +36,17 @@ export function getRuntimeConfig() {
     port: Number(process.env.PORT || 8789),
     openaiApiKey: process.env.OPENAI_API_KEY || "",
     openaiModel: process.env.OPENAI_MODEL || "gpt-5.5",
-    reasoningEffort: process.env.OPENAI_REASONING_EFFORT || "high",
+    reasoningEffort: normalizeOpenAIReasoningEffort(process.env.OPENAI_REASONING_EFFORT),
     openaiTimeoutMs: normalizeOpenAITimeoutMs(process.env.OPENAI_TIMEOUT_MS),
     openaiBackgroundMode: normalizeOpenAIBackgroundMode(process.env.OPENAI_BACKGROUND_MODE),
   };
+}
+
+export function normalizeOpenAIReasoningEffort(value) {
+  const normalized = String(value || "").trim().toLowerCase();
+  return ["none", "low", "medium", "high", "xhigh"].includes(normalized)
+    ? normalized
+    : DEFAULT_OPENAI_REASONING_EFFORT;
 }
 
 export function normalizeOpenAITimeoutMs(value) {

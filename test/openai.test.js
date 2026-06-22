@@ -28,13 +28,13 @@ const minimalEvaluation = {
 test("OpenAI request body keeps structured output and low verbosity", () => {
   const body = createEvaluationRequestBody({
     model: "gpt-5.5",
-    reasoningEffort: "high",
+    reasoningEffort: "medium",
     task: { formulaId: "test" },
     attemptText: "Because I practice, I improve.",
   });
 
   assert.equal(body.model, "gpt-5.5");
-  assert.deepEqual(body.reasoning, { effort: "high" });
+  assert.deepEqual(body.reasoning, { effort: "medium" });
   assert.equal(body.text.verbosity, "low");
   assert.equal(body.text.format.type, "json_schema");
   assert.equal(body.text.format.strict, true);
@@ -65,7 +65,7 @@ test("evaluateWithOpenAI uses background mode and polls until the result complet
     const result = await evaluateWithOpenAI({
       apiKey: "test-key",
       model: "gpt-5.5",
-      reasoningEffort: "high",
+      reasoningEffort: "medium",
       timeoutMs: 1000,
       backgroundMode: true,
       pollIntervalMs: 0,

@@ -175,7 +175,8 @@ interface Task {
   formulaMeta: {
     level: StructureLevel;
     formulaIndex: number;
-    formulaCount: number;
+    formulaCount: number; // current level pool
+    totalFormulaCount: number;
     relations: FormulaStep["relation"][];
     punctuationRule: string;
     sourceRefs: string[];

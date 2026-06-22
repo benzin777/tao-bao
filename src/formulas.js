@@ -457,6 +457,7 @@ export function createTask(inputConfig = {}, options = {}) {
       level: selectedFormula.level,
       formulaIndex,
       formulaCount: levelFormulas.length,
+      totalFormulaCount: STRUCTURE_FORMULAS.length,
       relations: selectedFormula.relationStack,
       punctuationRule: selectedFormula.punctuationRule,
       sourceRefs: selectedFormula.sourceRefs,

@@ -308,3 +308,19 @@ Movement:
 Decision:
 
 - Keep `gpt-5.5` with high reasoning as the quality target. Use background mode and longer local timeout for reliability before lowering reasoning effort. Lower effort remains a diagnostic lever, not the default product behavior.
+
+## 2026-06-22 - Medium Reasoning And Inventory Clarity
+
+Commit: pending at the time this entry was written.
+
+Movement:
+
+- Changed the general evaluator default from high reasoning to medium reasoning while keeping `gpt-5.5`.
+- Preserved background mode and the 300-second local timeout.
+- Added total Structure inventory metadata to tasks so the UI can show both the current level pool and the total pattern inventory.
+- Updated the task card from `Pattern X / 8` to `Level pattern X / 8` plus a `24 total` chip.
+
+Decision:
+
+- Medium reasoning is the default tutor loop. High reasoning is a calibration or hard-case lever, not the everyday setting.
+- The current curriculum has 24 formula shapes, not 9. The next scale problem is scenario/seed variety inside formulas, not merely adding unbacked formula labels.

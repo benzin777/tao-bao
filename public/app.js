@@ -366,7 +366,8 @@ function renderTaskMessage(task) {
       <div class="message-head">
         <span class="chip primary">Structure</span>
         <span class="chip level-chip">Level ${task.config.level}</span>
-        ${meta.formulaCount ? `<span class="chip">Pattern ${escapeHtml(meta.formulaIndex)} / ${escapeHtml(meta.formulaCount)}</span>` : ""}
+        ${meta.formulaCount ? `<span class="chip">Level pattern ${escapeHtml(meta.formulaIndex)} / ${escapeHtml(meta.formulaCount)}</span>` : ""}
+        ${meta.totalFormulaCount ? `<span class="chip">${escapeHtml(meta.totalFormulaCount)} total</span>` : ""}
         <span class="chip">${capitalize(task.config.support)}</span>
       </div>
       <p>${escapeHtml(task.instruction)}</p>

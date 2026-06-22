@@ -51,3 +51,11 @@ test("client evaluator timeout follows the server health timeout", async () => {
   assert.match(app, /timeoutMs: state\.evaluateTimeoutMs/);
   assert.doesNotMatch(app, /\/api\/evaluate[\s\S]{0,500}timeoutMs:\s*95000/);
 });
+
+test("task card distinguishes level pool from total structure inventory", async () => {
+  const app = await readFile(new URL("../public/app.js", import.meta.url), "utf8");
+
+  assert.match(app, /Level pattern/);
+  assert.match(app, /totalFormulaCount/);
+  assert.match(app, /total/);
+});
