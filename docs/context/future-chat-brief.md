@@ -1,6 +1,6 @@
 # Future Chat Brief
 
-Last updated: 2026-06-21
+Last updated: 2026-06-22
 
 ## Project
 
@@ -19,6 +19,8 @@ It began as an English learning concept for mastering selected failure modules, 
 - Public preview previously used a Cloudflare quick tunnel pointing to `127.0.0.1:8789`, but tunnel URLs are temporary and should be re-verified before use.
 - OpenAI key is configured only when `.env` contains `OPENAI_API_KEY`.
 - The quality default is `gpt-5.5` with high reasoning and `OPENAI_TIMEOUT_MS=90000`; lower these deliberately only when optimizing latency.
+- The 2026-06-22 investigation found that a real `/api/evaluate` calibration attempt timed out with 504 under the current quality settings. Do not judge evaluator quality from shell health alone.
+- Next-work research is captured in `docs/context/investigation-2026-06-22.md`; it covers curriculum depth, result surface, live calibration, lesson pages, progress loop, and GitHub/deploy.
 
 ## Current App
 
@@ -187,8 +189,9 @@ If credentials become available, verify or create the private GitHub repo named 
 
 ## Important Next Moves
 
-1. Configure `OPENAI_API_KEY` and test real evaluations.
-2. Observe real model output and tune the prompt/schema.
-3. Use `docs/context/source-backed-curriculum-prep.md` to expand the page reader and Structure formula pool with a source-backed curriculum.
-4. Add saved attempts and progression only after the first loop is stable.
-5. Later, add loop/progress surfaces showing attempts per task and success pipeline; do not build this before the core tutor turn is stable.
+1. Use `docs/context/investigation-2026-06-22.md` and `docs/context/source-backed-curriculum-prep.md` to expand the Structure curriculum/data model before more UI polish.
+2. Expand the formula pool from 9 patterns to a source-backed 18-24 patterns with relation coverage tests.
+3. Build a live evaluator calibration harness before prompt tuning; include passing, formula-fail, and grammar-blocker examples across Level 1/2/3.
+4. Upgrade the annotated result surface after the curriculum layer is stable.
+5. Add task-scoped attempt/revision state before saved attempts or analytics.
+6. Fix GitHub repo access and push `main` before deploy work.

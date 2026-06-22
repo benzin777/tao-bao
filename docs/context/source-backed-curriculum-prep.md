@@ -7,7 +7,7 @@ Date: 2026-06-22
 - Local app is running at `http://127.0.0.1:8789`.
 - `/api/health` returns `ok: true`, model `gpt-5.5`, and `hasOpenAIKey: true`.
 - `npm test` passes with 14 tests.
-- Git branch is `main`, ahead of `origin/main` by 6 commits.
+- Git branch is `main`, ahead of `origin/main` locally. The exact count can change until GitHub access is fixed.
 
 ## Problem To Solve Next
 
@@ -100,6 +100,8 @@ The learner should still see only the selected task and helpful hints. The backe
 5. Update the page reader content to reflect the expanded Structure curriculum.
 6. Keep `/api/task` and `/api/formulas` contracts compatible unless there is a deliberate contract update.
 7. Run real `/api/evaluate` checks only after formula data and schema validation pass locally.
+
+Note: a 2026-06-22 live calibration attempt against `/api/evaluate` timed out with 504 under the current `gpt-5.5` high-reasoning settings. Keep the quality model as the target, but add a measured calibration harness before treating evaluator behavior as proven.
 
 ## Acceptance Criteria
 

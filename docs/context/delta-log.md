@@ -243,3 +243,18 @@ Movement:
 Decision:
 
 - The next implementation slice should expand the curriculum/data model before more UI polish. More formulas should be source-backed and test-covered, not added as loose examples.
+
+## 2026-06-22 - Six-Lane Investigation
+
+Commit: pending at the time this entry was written.
+
+Movement:
+
+- Added `docs/context/investigation-2026-06-22.md` to audit curriculum depth, result surface, live evaluator calibration, source-backed lesson pages, progress loop, and GitHub/deploy as separate work lanes.
+- Rechecked the active Structure inventory and confirmed it is still only 9 formulas: 3 per level.
+- Attempted real `/api/evaluate` calibration and hit a 504 timeout under the current `gpt-5.5` high-reasoning settings.
+- Captured the implementation order: curriculum/data model first, expanded formulas second, calibration harness before prompt tuning, result UI after curriculum stability, progress loop after the tutor turn is stable.
+
+Decision:
+
+- The root product gap is curriculum depth, but live evaluation latency is now a measured risk. The next slice should be source-backed curriculum expansion plus tests, followed by a calibration harness, not another visual polish pass.
