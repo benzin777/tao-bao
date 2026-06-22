@@ -16,8 +16,8 @@ This investigation covers the six open product lanes before implementation:
 - Local app is running at `http://127.0.0.1:8789`.
 - `/api/health` returns `ok: true`, model `gpt-5.5`, and `hasOpenAIKey: true`.
 - `npm test` passes with 14 tests.
-- Git branch is `main`, ahead of `origin/main`.
-- Remote is configured as `https://github.com/benzin777/tao-dao.git`, but GitHub returns `Repository not found`.
+- Git branch is `main`.
+- Remote was later corrected to `https://github.com/benzin777/tao-bao.git` and pushed successfully on 2026-06-22.
 - Structure Mode has 9 live formulas: 3 per level.
 - A live `/api/evaluate` calibration attempt timed out at the app's server timeout boundary.
 
@@ -264,14 +264,14 @@ OpenAI production guidance reinforces:
 
 ### Local Findings
 
-Current remote state:
+Remote state at the time of this investigation:
 
 ```text
 origin  https://github.com/benzin777/tao-dao.git
 remote: Repository not found.
 ```
 
-The local repo is ahead of origin and cannot push until GitHub access/repo creation is solved.
+Later correction: the existing GitHub repository is `https://github.com/benzin777/tao-bao.git`; after switching `origin` to that URL, `main` pushed successfully.
 
 The app runs locally, but it is not production-ready:
 
@@ -286,10 +286,9 @@ The app runs locally, but it is not production-ready:
 
 Order:
 
-1. Fix GitHub remote/repo access.
-2. Push current `main`.
-3. Keep Cloudflare Tunnel only for previews.
-4. Pick real hosting only after evaluator latency and storage needs are understood.
+1. Keep `origin` on the reachable `tao-bao` repository unless GitHub is deliberately renamed.
+2. Keep Cloudflare Tunnel only for previews.
+3. Pick real hosting only after evaluator latency and storage needs are understood.
 
 Do not treat the Mac as production just because localhost works.
 
@@ -301,7 +300,7 @@ Do not treat the Mac as production just because localhost works.
 4. Calibration harness and measured evaluator runs.
 5. Result surface upgrade.
 6. Task-scoped progress loop.
-7. GitHub push and deploy planning.
+7. Deploy planning.
 
 ## Immediate Next Slice
 

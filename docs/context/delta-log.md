@@ -153,13 +153,15 @@ Decision:
 
 Commit: pending at the time this entry was written.
 
+Superseded on 2026-06-22: the reachable GitHub repository is `benzin777/tao-bao`, while the local product folder remains `tao-dao`.
+
 Movement:
 
 - Corrected the local `origin` remote from `tao-bao` to `tao-dao`.
 - Updated README, AGENTS, and future-chat context so the canonical project path and remote are no longer stale.
 - Verified that GitHub currently returns `Repository not found` for the corrected `tao-dao` URL from this shell.
 
-Decision:
+Historical decision, superseded:
 
 - The project identity is `tao-dao`; `tao-bao` was a remote naming mistake and should not be carried forward. If GitHub access fails, fix repo creation or credentials instead of reverting the name.
 
@@ -258,3 +260,18 @@ Movement:
 Decision:
 
 - The root product gap is curriculum depth, but live evaluation latency is now a measured risk. The next slice should be source-backed curriculum expansion plus tests, followed by a calibration harness, not another visual polish pass.
+
+## 2026-06-22 - GitHub Remote Reality
+
+Commit: pending at the time this entry was written.
+
+Movement:
+
+- Confirmed the existing GitHub repository is `https://github.com/benzin777/tao-bao.git`.
+- Updated local `origin` from `tao-dao` to `tao-bao`.
+- Pushed local `main` successfully to GitHub.
+- Updated project context so future sessions preserve the distinction between local product identity (`tao-dao`) and remote repository name (`tao-bao`).
+
+Decision:
+
+- Keep the local project and product named Tao Dao / `tao-dao`. Use `benzin777/tao-bao` as the GitHub remote until the repository is deliberately renamed.

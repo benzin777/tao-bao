@@ -8,8 +8,8 @@ The product is not a generic grammar chatbot. It is a constrained writing workbe
 
 - Local project path: `/Users/dmitryb/Documents/Codex/tao-dao`
 - Local git repo: yes, branch `main`
-- GitHub remote: `origin` -> `https://github.com/benzin777/tao-dao.git`
-- Remote reachability: GitHub currently returns `Repository not found` from this shell, so the repo may need to be created or credentials may need to be added.
+- GitHub remote: `origin` -> `https://github.com/benzin777/tao-bao.git`
+- Remote reachability: pushed successfully to GitHub on 2026-06-22.
 - Runtime: no-framework Node server plus static mobile UI
 - API provider: OpenAI Responses API through the local server
 - Default model: `gpt-5.5`
@@ -206,7 +206,7 @@ Start here in future sessions:
 
 ## GitHub Status
 
-The project is committed locally and the canonical remote is `tao-dao`.
+The local project identity is `tao-dao`; the existing GitHub repository is named `tao-bao`.
 
 ```bash
 git remote -v
@@ -215,15 +215,15 @@ git remote -v
 Expected remote:
 
 ```bash
-origin  https://github.com/benzin777/tao-dao.git (fetch)
-origin  https://github.com/benzin777/tao-dao.git (push)
+origin  https://github.com/benzin777/tao-bao.git (fetch)
+origin  https://github.com/benzin777/tao-bao.git (push)
 ```
 
-Current caveat: `git ls-remote --heads origin main` returns `Repository not found` from this machine. Treat the URL as the intended canonical target until GitHub access is available or the private repo exists.
+Current caveat: the repository name on GitHub does not match the local product folder name. Keep the local folder as `tao-dao`, but push to `tao-bao` unless the remote repository is deliberately renamed.
 
 If the remote ever needs to be recreated:
 
 ```bash
-git remote set-url origin https://github.com/benzin777/tao-dao.git
+git remote set-url origin https://github.com/benzin777/tao-bao.git
 git push -u origin main
 ```

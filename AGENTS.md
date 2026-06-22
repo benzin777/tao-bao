@@ -78,15 +78,14 @@ Do not run production builds unless a future build system exists and the user ex
 - Local repo exists on `main`.
 - Commit completed slices.
 - Do not rewrite history unless the user explicitly asks.
-- Canonical GitHub remote is `origin` -> `https://github.com/benzin777/tao-dao.git`.
-- If GitHub returns `Repository not found`, do not switch back to `tao-bao`; create or authenticate access to `tao-dao`.
+- Local product identity is `tao-dao`, but the current GitHub repository is `origin` -> `https://github.com/benzin777/tao-bao.git`.
+- Do not change the remote back to `tao-dao` unless the GitHub repository is deliberately renamed or recreated.
 
 ## Known Constraints
 
-- `gh` GitHub CLI is not available in the shell at the time this file was written.
-- No GitHub token is available in environment variables.
-- Existing `.ssh` only shows `config` and `known_hosts`, not a private key.
-- The local `origin` URL is configured as `tao-dao`, but GitHub currently returns `Repository not found` from this shell.
+- `gh` GitHub CLI is available in the shell at the time this file was updated.
+- GitHub push to `https://github.com/benzin777/tao-bao.git` succeeded from this checkout on 2026-06-22.
+- The local folder remains `/Users/dmitryb/Documents/Codex/tao-dao`; only the GitHub repository name differs.
 - Real evaluation requires `OPENAI_API_KEY`; without it, the app shell runs but evaluation returns the configured "No key" path.
 
 ## Near-Term Priorities

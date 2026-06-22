@@ -13,8 +13,8 @@ It began as an English learning concept for mastering selected failure modules, 
 - Local git repo exists.
 - Branch: `main`.
 - Latest committed context pack: `aaa3359 docs: add project context pack`.
-- Canonical GitHub remote: `origin` -> `https://github.com/benzin777/tao-dao.git`.
-- Remote reachability: `git ls-remote --heads origin main` currently returns `Repository not found`, so the private repo may need to be created or credentials may need to be added.
+- GitHub remote: `origin` -> `https://github.com/benzin777/tao-bao.git`.
+- Remote reachability: push to GitHub succeeded on 2026-06-22. The local product folder remains `tao-dao`; the GitHub repository is named `tao-bao`.
 - `npm test` passed after the latest app change.
 - Public preview previously used a Cloudflare quick tunnel pointing to `127.0.0.1:8789`, but tunnel URLs are temporary and should be re-verified before use.
 - OpenAI key is configured only when `.env` contains `OPENAI_API_KEY`.
@@ -176,16 +176,14 @@ Borrow from Webstar's discipline, not its product identity:
 
 ## GitHub / Repo State
 
-As of 2026-06-21:
+As of 2026-06-22:
 
 - `/Users/dmitryb/Documents/Codex/tao-dao` has local git history on `main`.
-- `origin` is configured as `https://github.com/benzin777/tao-dao.git`.
-- GitHub returns `Repository not found` for that URL from this shell.
-- `gh` is not available.
-- No GitHub token is visible in env vars.
-- No SSH private key is visible under `~/.ssh`.
+- `origin` is configured as `https://github.com/benzin777/tao-bao.git`.
+- GitHub push to `tao-bao` succeeded from this shell.
+- `gh` is available and authenticated in this environment.
 
-If credentials become available, verify or create the private GitHub repo named `tao-dao` and push `main`.
+Do not point `origin` back to `tao-dao` unless the GitHub repository is deliberately renamed or recreated.
 
 ## Important Next Moves
 
@@ -194,4 +192,4 @@ If credentials become available, verify or create the private GitHub repo named 
 3. Build a live evaluator calibration harness before prompt tuning; include passing, formula-fail, and grammar-blocker examples across Level 1/2/3.
 4. Upgrade the annotated result surface after the curriculum layer is stable.
 5. Add task-scoped attempt/revision state before saved attempts or analytics.
-6. Fix GitHub repo access and push `main` before deploy work.
+6. Keep GitHub pushed before deploy work; remote access is currently unblocked through `benzin777/tao-bao`.
