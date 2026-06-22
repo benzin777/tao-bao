@@ -19,7 +19,7 @@ It began as an English learning concept for mastering selected failure modules, 
 - Structure Mode now has 24 source-backed formulas: 8 per level.
 - Public preview previously used a Cloudflare quick tunnel pointing to `127.0.0.1:8789`, but tunnel URLs are temporary and should be re-verified before use.
 - OpenAI key is configured only when `.env` contains `OPENAI_API_KEY`.
-- The quality default is `gpt-5.5` with high reasoning and `OPENAI_TIMEOUT_MS=90000`; lower these deliberately only when optimizing latency.
+- The quality default is `gpt-5.5` with high reasoning, `OPENAI_TIMEOUT_MS=300000`, and `OPENAI_BACKGROUND_MODE=true`; lower reasoning deliberately only when optimizing latency or running diagnostics.
 - The 2026-06-22 investigation found that a real `/api/evaluate` calibration attempt timed out with 504 under the current quality settings. Do not judge evaluator quality from shell health alone.
 - Next-work research is captured in `docs/context/investigation-2026-06-22.md`; it covers curriculum depth, result surface, live calibration, lesson pages, progress loop, and GitHub/deploy.
 

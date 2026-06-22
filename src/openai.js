@@ -1,8 +1,19 @@
 import { EVALUATION_SCHEMA } from "./schema.js";
+import { DEFAULT_OPENAI_TIMEOUT_MS } from "./config.js";
 
 const OPENAI_RESPONSES_URL = "https://api.openai.com/v1/responses";
+const BACKGROUND_POLL_INTERVAL_MS = 2000;
 
-export async function evaluateWithOpenAI({ apiKey, model, reasoningEffort, timeoutMs, task, attemptText }) {
+export async function evaluateWithOpenAI({
+  apiKey,
+  model,
+  reasoningEffort,
+  timeoutMs,
+  backgroundMode = true,
+  pollIntervalMs = BACKGROUND_POLL_INTERVAL_MS,
+  task,
+  attemptText,
+}) {
   if (!apiKey) {
     const error = new Error("OPENAI_API_KEY is not configured.");
     error.statusCode = 503;
@@ -10,7 +21,61 @@ export async function evaluateWithOpenAI({ apiKey, model, reasoningEffort, timeo
     throw error;
   }
 
-  const body = {
+  const body = createEvaluationRequestBody({ model, reasoningEffort, task, attemptText });
+
+  const controller = new AbortController();
+  const requestTimeoutMs = timeoutMs || DEFAULT_OPENAI_TIMEOUT_MS;
+  const timeout = setTimeout(() => controller.abort(), requestTimeoutMs);
+
+  try {
+    const payload = backgroundMode
+      ? await createAndPollBackgroundResponse({
+          apiKey,
+          body,
+          signal: controller.signal,
+          pollIntervalMs,
+        })
+      : await createForegroundResponse({
+          apiKey,
+          body,
+          signal: controller.signal,
+        });
+
+    const outputText = extractOutputText(payload);
+    if (!outputText) {
+      const error = new Error("OpenAI response did not include text output.");
+      error.statusCode = 502;
+      error.expose = true;
+      throw error;
+    }
+
+    try {
+      return JSON.parse(outputText);
+    } catch (parseError) {
+      const error = new Error("OpenAI response was not valid JSON.");
+      error.statusCode = 502;
+      error.expose = true;
+      error.cause = parseError;
+      throw error;
+    }
+  } catch (fetchError) {
+    if (fetchError?.name === "AbortError") {
+      const error = new Error(
+        `Evaluator timed out after ${Math.round(requestTimeoutMs / 1000)} seconds. The API is connected, but this high-quality evaluation is still running too long. Lower OPENAI_REASONING_EFFORT in .env only for diagnostics.`,
+      );
+      error.statusCode = 504;
+      error.expose = true;
+      throw error;
+    }
+
+    throw fetchError;
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
+export function createEvaluationRequestBody({ model, reasoningEffort, task, attemptText }) {
+  return {
     model,
     reasoning: {
       effort: reasoningEffort,
@@ -42,59 +107,121 @@ export async function evaluateWithOpenAI({ apiKey, model, reasoningEffort, timeo
       },
     ],
   };
+}
 
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), timeoutMs || 90000);
+async function createAndPollBackgroundResponse({ apiKey, body, signal, pollIntervalMs }) {
+  const createPayload = await fetchOpenAIResponse({
+    apiKey,
+    body: {
+      ...body,
+      background: true,
+      store: true,
+    },
+    signal,
+  }).catch(async (error) => {
+    if (!isBackgroundModeUnsupported(error)) throw error;
 
-  let response;
-  try {
-    response = await fetch(OPENAI_RESPONSES_URL, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(body),
-      signal: controller.signal,
+    return createForegroundResponse({
+      apiKey,
+      body,
+      signal,
     });
-  } catch (fetchError) {
-    const error = new Error(
-      fetchError?.name === "AbortError"
-        ? "Evaluator timed out. Try again with a shorter sentence, or lower OPENAI_REASONING_EFFORT in .env."
-        : "Evaluator request failed. Check the OpenAI key and network connection.",
-    );
-    error.statusCode = fetchError?.name === "AbortError" ? 504 : 502;
-    error.expose = true;
-    throw error;
-  } finally {
-    clearTimeout(timeout);
+  });
+
+  if (!createPayload?.id || !["queued", "in_progress"].includes(createPayload.status)) {
+    return createPayload;
   }
 
+  let payload = createPayload;
+  while (["queued", "in_progress"].includes(payload.status)) {
+    await sleep(pollIntervalMs, signal);
+    payload = await retrieveOpenAIResponse({
+      apiKey,
+      responseId: payload.id,
+      signal,
+    });
+  }
+
+  if (payload.status && payload.status !== "completed") {
+    const error = new Error(payload.error?.message || `OpenAI background response ended with status ${payload.status}.`);
+    error.statusCode = 502;
+    error.expose = true;
+    throw error;
+  }
+
+  return payload;
+}
+
+async function createForegroundResponse({ apiKey, body, signal }) {
+  return fetchOpenAIResponse({
+    apiKey,
+    body,
+    signal,
+  });
+}
+
+async function fetchOpenAIResponse({ apiKey, body, signal }) {
+  const response = await fetch(OPENAI_RESPONSES_URL, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(body),
+    signal,
+  });
+
+  return parseOpenAIResponse(response);
+}
+
+async function retrieveOpenAIResponse({ apiKey, responseId, signal }) {
+  const response = await fetch(`${OPENAI_RESPONSES_URL}/${encodeURIComponent(responseId)}`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+      "Content-Type": "application/json",
+    },
+    signal,
+  });
+
+  return parseOpenAIResponse(response);
+}
+
+async function parseOpenAIResponse(response) {
   const payload = await response.json().catch(() => ({}));
   if (!response.ok) {
     const error = new Error(payload?.error?.message || `OpenAI request failed with ${response.status}`);
     error.statusCode = response.status;
     error.expose = true;
+    error.openaiError = payload?.error;
     throw error;
   }
 
-  const outputText = extractOutputText(payload);
-  if (!outputText) {
-    const error = new Error("OpenAI response did not include text output.");
-    error.statusCode = 502;
-    error.expose = true;
-    throw error;
+  return payload;
+}
+
+function isBackgroundModeUnsupported(error) {
+  if (![400, 403].includes(error?.statusCode)) return false;
+  const message = `${error.message || ""} ${error.openaiError?.param || ""}`.toLowerCase();
+  return message.includes("background") || message.includes("store");
+}
+
+function sleep(durationMs, signal) {
+  if (signal?.aborted) {
+    return Promise.reject(signal.reason || new DOMException("Aborted", "AbortError"));
   }
 
-  try {
-    return JSON.parse(outputText);
-  } catch (parseError) {
-    const error = new Error("OpenAI response was not valid JSON.");
-    error.statusCode = 502;
-    error.expose = true;
-    error.cause = parseError;
-    throw error;
-  }
+  return new Promise((resolve, reject) => {
+    const timeout = setTimeout(resolve, durationMs);
+    signal?.addEventListener(
+      "abort",
+      () => {
+        clearTimeout(timeout);
+        reject(signal.reason || new DOMException("Aborted", "AbortError"));
+      },
+      { once: true },
+    );
+  });
 }
 
 function createSystemPrompt() {

@@ -16,6 +16,8 @@ const server = http.createServer(async (request, response) => {
         ok: true,
         model: runtime.openaiModel,
         hasOpenAIKey: Boolean(runtime.openaiApiKey),
+        openaiTimeoutMs: runtime.openaiTimeoutMs,
+        openaiBackgroundMode: runtime.openaiBackgroundMode,
       });
     }
 
@@ -47,6 +49,7 @@ const server = http.createServer(async (request, response) => {
           model: runtime.openaiModel,
           reasoningEffort: runtime.reasoningEffort,
           timeoutMs: runtime.openaiTimeoutMs,
+          backgroundMode: runtime.openaiBackgroundMode,
         },
       });
 

@@ -41,3 +41,13 @@ test("hint and page material include the expanded structure relation groups", as
   assert.match(app, /Cambridge/);
   assert.match(app, /Purdue/);
 });
+
+test("client evaluator timeout follows the server health timeout", async () => {
+  const app = await readFile(new URL("../public/app.js", import.meta.url), "utf8");
+
+  assert.match(app, /evaluateTimeoutMs: 310000/);
+  assert.match(app, /health\.openaiTimeoutMs/);
+  assert.match(app, /state\.evaluateTimeoutMs = Math\.max\(95000, Number\(health\.openaiTimeoutMs\) \+ 10000\)/);
+  assert.match(app, /timeoutMs: state\.evaluateTimeoutMs/);
+  assert.doesNotMatch(app, /\/api\/evaluate[\s\S]{0,500}timeoutMs:\s*95000/);
+});

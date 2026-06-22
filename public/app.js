@@ -8,6 +8,7 @@ const state = {
   messages: [],
   isEvaluating: false,
   activePageId: "structure-course",
+  evaluateTimeoutMs: 310000,
 };
 
 const elements = {
@@ -172,6 +173,9 @@ async function checkHealth() {
       elements.apiPill.textContent = health.hasOpenAIKey ? health.model : "No key";
       elements.apiPill.classList.toggle("missing", !health.hasOpenAIKey);
     }
+    if (Number.isFinite(Number(health.openaiTimeoutMs))) {
+      state.evaluateTimeoutMs = Math.max(95000, Number(health.openaiTimeoutMs) + 10000);
+    }
     if (!health.hasOpenAIKey) {
       addMessage({
         role: "system",
@@ -253,6 +257,21 @@ async function submitAttempt(event) {
         content: "Still working. I will show the result or a timeout instead of leaving the chat stuck.",
       });
     }, 28000),
+    setTimeout(() => {
+      updateMessage(loadingId, {
+        content: "Still checking the layered structure. High-quality reasoning can take longer on difficult patterns.",
+      });
+    }, 75000),
+    setTimeout(() => {
+      updateMessage(loadingId, {
+        content: "Still waiting on the evaluator. The request is alive; I will return the result or a clear timeout.",
+      });
+    }, 130000),
+    setTimeout(() => {
+      updateMessage(loadingId, {
+        content: "Still running the high-quality evaluator. Some layered structures take several minutes.",
+      });
+    }, 220000),
   ];
 
   try {
@@ -263,7 +282,7 @@ async function submitAttempt(event) {
         task: state.task,
         attemptText,
       },
-      { timeoutMs: 95000 },
+      { timeoutMs: state.evaluateTimeoutMs },
     );
     replaceMessage(loadingId, {
       role: "assistant",

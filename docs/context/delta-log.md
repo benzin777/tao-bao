@@ -291,3 +291,20 @@ Movement:
 Decision:
 
 - Curriculum depth is no longer the immediate bottleneck. The next bottleneck is measured evaluator calibration across the expanded formula pool, especially timeout and prompt/schema behavior under `gpt-5.5` high reasoning.
+
+## 2026-06-22 - Evaluator Timeout Hardening
+
+Commit: pending at the time this entry was written.
+
+Movement:
+
+- Reproduced a real Level 1 `/api/evaluate` call successfully in about 12 seconds, proving the API path is connected.
+- Reproduced a Level 3 high-reasoning evaluation timing out at 180 seconds, proving the bottleneck is long-running evaluator latency rather than a missing API connection.
+- Moved the evaluator default to a 300-second local window.
+- Enabled OpenAI Responses API background mode by default, with foreground fallback if background mode is not supported.
+- Exposed evaluator timeout and background-mode status through `/api/health`.
+- Added tests for timeout normalization, background-mode config, client timeout coordination, OpenAI request body shape, and background polling.
+
+Decision:
+
+- Keep `gpt-5.5` with high reasoning as the quality target. Use background mode and longer local timeout for reliability before lowering reasoning effort. Lower effort remains a diagnostic lever, not the default product behavior.

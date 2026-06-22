@@ -54,7 +54,8 @@ OPENAI_API_KEY=...
 OPENAI_MODEL=gpt-5.5
 OPENAI_REASONING_EFFORT=high
 PORT=8789
-OPENAI_TIMEOUT_MS=90000
+OPENAI_TIMEOUT_MS=300000
+OPENAI_BACKGROUND_MODE=true
 ```
 
 The API key stays server-side. The browser only calls local `/api/*` endpoints.
@@ -159,7 +160,7 @@ docs/
 
 | Endpoint | Purpose |
 | --- | --- |
-| `GET /api/health` | Reports server status, selected model, and whether an OpenAI key is configured. |
+| `GET /api/health` | Reports server status, selected model, key presence, evaluator timeout, and background-mode setting. |
 | `GET /api/formulas?level=1` | Returns formulas for a structure level. |
 | `POST /api/task` | Creates a Structure Mode task from `lesson`, `level`, and `support`. |
 | `POST /api/evaluate` | Sends the learner attempt to the OpenAI evaluator and returns structured feedback. |
