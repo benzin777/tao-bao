@@ -189,6 +189,6 @@ If credentials become available, verify or create the private GitHub repo named 
 
 1. Configure `OPENAI_API_KEY` and test real evaluations.
 2. Observe real model output and tune the prompt/schema.
-3. Expand the page reader with a source-backed Structure curriculum.
+3. Use `docs/context/source-backed-curriculum-prep.md` to expand the page reader and Structure formula pool with a source-backed curriculum.
 4. Add saved attempts and progression only after the first loop is stable.
 5. Later, add loop/progress surfaces showing attempts per task and success pipeline; do not build this before the core tutor turn is stable.

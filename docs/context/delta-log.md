@@ -228,3 +228,18 @@ Movement:
 Decision:
 
 - Course pages are reference objects around the chat, not assistant turns. The chat remains the practice surface; the reader holds Notion/wiki-like lesson material.
+
+## 2026-06-22 - Source-Backed Curriculum Run Prep
+
+Commit: pending at the time this entry was written.
+
+Movement:
+
+- Verified localhost health, OpenAI key presence, and the current test suite before expanding curriculum work.
+- Confirmed the active Structure pool is still 9 formulas total, with 3 patterns per level.
+- Added `docs/context/source-backed-curriculum-prep.md` as the next-run handoff for a source-backed Structure curriculum expansion.
+- Anchored the next expansion to CEFR, Cambridge Grammar, and Purdue OWL references before adding more formulas.
+
+Decision:
+
+- The next implementation slice should expand the curriculum/data model before more UI polish. More formulas should be source-backed and test-covered, not added as loose examples.
